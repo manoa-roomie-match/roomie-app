@@ -1,14 +1,32 @@
-html,
-body {
-  --bs-light-rgb: 236, 236, 236;
-  box-sizing: border-box;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-}
-.wrapper {
-  box-sizing: border-box;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+    html,
+    body {
+        background-color: rgb(255, 0, 0)f2;
+        --bs-light-rgb: 236, 236, 236;
+        box-sizing: border-box;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .wrapper {
+        box-sizing: border-box;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .uh-navbar {
+        background-color: #00533F !important;
+        padding: 0.75rem 1rem;
+    }
+    
+    .uh-navbar .navbar-brand,
+    .uh-navbar .nav-link,
+    .uh-navbar .navbar-text {
+        color: #F7F3E3 !important;
+    }
+    
+    .uh-footer {
+        background-color: #00382A !important;
+        color: #F7F3E3 !important;
+    }
