@@ -53,7 +53,7 @@ const SignIn = () => {
               </Card.Body>
               <Card.Footer>
                 Don&apos;t have an account?
-                <a href="/auth/signup" className="ms-1">Sign up</a>
+                <a href="/auth/signup" className="ms-1">Register with UH email</a>
               </Card.Footer>
             </Card>
           </Col>

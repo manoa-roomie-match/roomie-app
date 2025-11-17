@@ -1,0 +1,24 @@
+.backgroundImage {
+    height: 100vh;
+    background: url('/landing-page-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    color: black;
+    text-align: center;
+    padding-top: 2rem;
+}
+
+.backgroundImage h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.backgroundImage p {
+    font-size: 1.5rem;
+}

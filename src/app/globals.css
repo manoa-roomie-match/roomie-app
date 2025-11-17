@@ -20,7 +20,12 @@
         padding: 0.75rem 1rem;
     }
     
-    .uh-navbar .navbar-brand,
+    .uh-navbar .navbar-brand {
+        color: #F7F3E3 !important;
+        align-items: center;
+        /* className="ms-auto d-flex align-items-center gap-2" */
+    }
+    
     .uh-navbar .nav-link,
     .uh-navbar .navbar-text {
         color: #F7F3E3 !important;
