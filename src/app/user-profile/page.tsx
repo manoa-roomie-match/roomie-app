@@ -44,6 +44,7 @@ export default function ProfilePage() {
           <Col md={8}>
             <h2 className="profile-name">{user.name || 'Unnamed User'}</h2>
             <p className="profile-email">{user.email}</p>
+            <p className="profile-major">Major: {user.major || 'No major provided.'}</p>
             {user.randomKey && (
               <p className="profile-role">Role: {user.randomKey}</p>
             )}
