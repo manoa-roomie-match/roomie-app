@@ -10,6 +10,7 @@ import {
   Lock,
   PersonFill,
   PersonPlusFill,
+  Person,
 } from 'react-bootstrap-icons';
 
 const NavBar: React.FC = () => {
@@ -72,6 +73,13 @@ const NavBar: React.FC = () => {
           <Nav>
             {session ? (
               <NavDropdown id="login-dropdown" title={currentUser}>
+                <NavDropdown.Item
+                  id="login-dropdown-sign-out"
+                  href="/user-profile"
+                >
+                  <Person />
+                  Profile
+                </NavDropdown.Item>
                 <NavDropdown.Item
                   id="login-dropdown-sign-out"
                   href="/api/auth/signout"
