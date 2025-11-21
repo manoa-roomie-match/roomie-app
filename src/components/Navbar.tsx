@@ -85,7 +85,7 @@ const NavBar: React.FC = () => {
                     active={pathName === '/create-profile'}
                   >
                     Create Profile
-                  </Nav.Link>
+                  </Nav.Link>,
                 ]
               : ''}
             {currentUser && role === 'ADMIN' ? (
