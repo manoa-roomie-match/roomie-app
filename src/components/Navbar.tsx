@@ -54,6 +54,30 @@ const NavBar: React.FC = () => {
                   >
                     List Stuff
                   </Nav.Link>,
+                  <Nav.Link
+                    id="edit-profile-nav"
+                    href="/edit-profile"
+                    key="edit-profile"
+                    active={pathName === '/edit-profile'}
+                  >
+                    Edit Profile
+                  </Nav.Link>,
+                  <Nav.Link
+                    id="matching-nav"
+                    href="/matching"
+                    key="matching"
+                    active={pathName === '/matching'}
+                  >
+                    Find your match!
+                  </Nav.Link>,
+                  <Nav.Link
+                    id="search-nav"
+                    href="/search"
+                    key="search"
+                    active={pathName === '/search'}
+                  >
+                    Search for Roomies!
+                  </Nav.Link>,
                 ]
               : ''}
             {currentUser && role === 'ADMIN' ? (
