@@ -1,7 +1,5 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table, Image } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma';
-import StuffItem from '@/components/StuffItem';
+import { Col, Container, Row, Image } from 'react-bootstrap';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 
@@ -15,19 +13,14 @@ const SearchPage = async () => {
       // eslint-disable-next-line @typescript-eslint/comma-dangle
     } | null,
   );
-  const owner = (session && session.user && session.user.email) || '';
   // console.log(stuff);
   return (
     <main>
       <Container id="search-page" fluid className="py-3">
         <Row>
           <Col>
-          <h1>Search for a roomate</h1>
-            <Image
-            src="/search.jpg"
-            alt="Search page"
-            fluid
-            />
+            <h1>Search for a roomate</h1>
+            <Image src="/search.jpg" alt="Search page" fluid />
           </Col>
         </Row>
       </Container>

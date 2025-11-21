@@ -1,7 +1,5 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table, Image } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma';
-import StuffItem from '@/components/StuffItem';
+import { Col, Container, Row, Image } from 'react-bootstrap';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 
@@ -15,19 +13,14 @@ const EditProfilePage = async () => {
       // eslint-disable-next-line @typescript-eslint/comma-dangle
     } | null,
   );
-  const owner = (session && session.user && session.user.email) || '';
   // console.log(stuff);
   return (
     <main>
       <Container id="edit-profile" fluid className="py-3">
         <Row>
           <Col>
-          <h1>Edit Profile</h1>
-            <Image
-            src="/edit_profile.jpg"
-            alt="Profile"
-            fluid
-            />
+            <h1>Edit Profile</h1>
+            <Image src="/edit_profile.jpg" alt="Profile" fluid />
           </Col>
         </Row>
       </Container>
