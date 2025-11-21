@@ -78,6 +78,14 @@ const NavBar: React.FC = () => {
                   >
                     Search for Roomies!
                   </Nav.Link>,
+                  <Nav.Link
+                    id="create-profile-nav"
+                    href="/create-profile"
+                    key="create-profile"
+                    active={pathName === '/create-profile'}
+                  >
+                    Create Profile
+                  </Nav.Link>
                 ]
               : ''}
             {currentUser && role === 'ADMIN' ? (
