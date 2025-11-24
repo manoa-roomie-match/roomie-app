@@ -20,39 +20,59 @@ const NavBar: React.FC = () => {
   const pathName = usePathname();
   return (
     <Navbar expand="lg" className="uh-navbar">
-      <Container className="">
-          <Navbar.Brand
-            href="/"
-            className="d-flex align-items-center gap-2 px-0"
-          >
-            <Image
-              src="/uh-manoa-logo.ico"
-              alt="UH Manoa Logo"
-              width={40}
-              height={40}
-            />
-            <span className="">Manoa Roomie Match</span>
-          </Navbar.Brand>
+      <Container
+        fluid
+        className="d-flex justify-content-between align-items-center px-3"
+      >
+        <Navbar.Brand className="d-flex align-items-center gap-1 px-0">
+          <Image
+            src="/uh-manoa-logo.ico"
+            alt="UH Manoa Logo"
+            width={40}
+            height={40}
+          />
+          <span className="ms-0">Mānoa Roomie Match</span>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto justify-content-start">
+            <Nav.Link href="/" active={pathName === '/'}>
+              Home
+            </Nav.Link>
+            {!currentUser && (
+              <>
+                <Nav.Link href="/contact" active={pathName === '/contact'}>
+                  Contact Us
+                </Nav.Link>
+                <Nav.Link
+                  href="/how-it-works"
+                  active={pathName === '/how-it-works'}
+                >
+                  How It Works
+                </Nav.Link>
+              </>
+            )}
+
             {currentUser
               ? [
                   <Nav.Link
-                    id="add-stuff-nav"
-                    href="/add"
-                    key="add"
-                    active={pathName === '/add'}
+                    id="find-roommate-nav"
+                    href="/find-roommate"
+                    key="find-roommate"
+                    active={pathName === '/find-roommate'}
                   >
-                    Add Stuff
+                    Find My Roommate
                   </Nav.Link>,
                   <Nav.Link
-                    id="list-stuff-nav"
-                    href="/list"
-                    key="list"
-                    active={pathName === '/list'}
+                    id="view-roommate-nav"
+                    href="/view-roommates"
+                    key="view-roommates"
+                    active={pathName === '/view-roommates'}
                   >
-                    List Stuff
+                    View Roommate Listings
+                  </Nav.Link>,
+                  <Nav.Link id="my-messages-nav" href="/messages" key="messages" active={pathName === '/messages'}>
+                    My Messages
                   </Nav.Link>,
                 ]
               : ''}
@@ -63,7 +83,7 @@ const NavBar: React.FC = () => {
                 key="admin"
                 active={pathName === '/admin'}
               >
-                Admin
+                My Messages
               </Nav.Link>
             ) : (
               ''
@@ -88,7 +108,7 @@ const NavBar: React.FC = () => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <NavDropdown id="login-dropdown" title="Login">
+              <NavDropdown id="login-dropdown" title="Login" align="end">
                 <NavDropdown.Item
                   id="login-dropdown-sign-in"
                   href="/auth/signin"
