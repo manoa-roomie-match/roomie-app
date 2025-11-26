@@ -18,7 +18,7 @@ const Home = () => {
               {currentUser}
               !
             </h1>
-            <h2>We're excited to help you find your perfect roommate.</h2>
+            <h2>We&apos;re excited to help you find your perfect roommate.</h2>
           </>
         ) : (
           <>

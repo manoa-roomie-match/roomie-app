@@ -1,7 +1,5 @@
 /* eslint-disable react/jsx-indent, @typescript-eslint/indent */
-
 'use client';
-
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Container, Nav, Navbar, NavDropdown, Image } from 'react-bootstrap';
