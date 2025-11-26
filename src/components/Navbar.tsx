@@ -74,6 +74,9 @@ const NavBar: React.FC = () => {
                   <Nav.Link id="my-messages-nav" href="/messages" key="messages" active={pathName === '/messages'}>
                     My Messages
                   </Nav.Link>,
+                  <Nav.Link>
+                    {role === 'ADMIN' ? 'Admin' : 'User'} Dashboard
+                  </Nav.Link>
                 ]
               : ''}
             {/* {currentUser && role === 'ADMIN' ? (
