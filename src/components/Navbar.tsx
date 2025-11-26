@@ -151,4 +151,4 @@ const NavBar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default NavBar;
