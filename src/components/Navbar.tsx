@@ -76,7 +76,7 @@ const NavBar: React.FC = () => {
                   </Nav.Link>,
                 ]
               : ''}
-            {currentUser && role === 'ADMIN' ? (
+            {/* {currentUser && role === 'ADMIN' ? (
               <Nav.Link
                 id="admin-stuff-nav"
                 href="/admin"
@@ -87,7 +87,7 @@ const NavBar: React.FC = () => {
               </Nav.Link>
             ) : (
               ''
-            )}
+            )} */}
           </Nav>
           <Nav>
             {session ? (
