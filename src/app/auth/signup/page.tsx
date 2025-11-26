@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Card, Col, Container, Button, Form, Row } from 'react-bootstrap';
 import { createUser } from '@/lib/dbActions';
+import styles from './signup.module.css';
 
 type SignUpForm = {
   email: string;
@@ -44,7 +45,7 @@ const SignUp = () => {
   };
 
   return (
-    <main>
+    <main className={styles.pageBackground}>
       <Container>
         <Row className="justify-content-center">
           <Col xs={5}>

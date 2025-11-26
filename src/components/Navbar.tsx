@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-indent, @typescript-eslint/indent */
-
 'use client';
 
 import { useSession } from 'next-auth/react';
@@ -11,6 +9,8 @@ import {
   PersonFill,
   PersonPlusFill,
 } from 'react-bootstrap-icons';
+
+import styles from './navbar.module.css';
 
 const NavBar: React.FC = () => {
   const { data: session } = useSession();
@@ -31,7 +31,11 @@ const NavBar: React.FC = () => {
             width={40}
             height={40}
           />
-          <span className="ms-0">Mānoa Roomie Match</span>
+          <span className={styles.navBrand}>
+            Mānoa
+            <br />
+            <span className={styles.navBrandLine}>Roomie Match</span>
+          </span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -39,30 +43,22 @@ const NavBar: React.FC = () => {
             <Nav.Link href="/" active={pathName === '/'}>
               Home
             </Nav.Link>
-            {!currentUser && (
-              <>
-                <Nav.Link href="/contact" active={pathName === '/contact'}>
-                  Contact Us
-                </Nav.Link>
-                <Nav.Link
-                  href="/how-it-works"
-                  active={pathName === '/how-it-works'}
-                >
-                  How It Works
-                </Nav.Link>
-              </>
-            )}
-
-            {currentUser
+            {!currentUser
               ? [
-                  <Nav.Link
-                    id="find-roommate-nav"
-                    href="/find-roommate"
-                    key="find-roommate"
-                    active={pathName === '/find-roommate'}
-                  >
-                    Find My Roommate
+                  <Nav.Link href="/contact" active={pathName === '/contact'}>
+                    Contact Us
                   </Nav.Link>,
+                  <Nav.Link
+                    href="/how-it-works"
+                    active={pathName === '/how-it-works'}
+                  >
+                    How It Works
+                  </Nav.Link>,
+                ]
+              : ''}
+
+            {currentUser && role === 'USER'
+              ? [
                   <Nav.Link
                     id="view-roommate-nav"
                     href="/view-roommates"
@@ -71,7 +67,12 @@ const NavBar: React.FC = () => {
                   >
                     View Roommate Listings
                   </Nav.Link>,
-                  <Nav.Link id="my-messages-nav" href="/messages" key="messages" active={pathName === '/messages'}>
+                  <Nav.Link
+                    id="my-messages-nav"
+                    href="/messages"
+                    key="messages"
+                    active={pathName === '/messages'}
+                  >
                     My Messages
                   </Nav.Link>,
                   <Nav.Link
@@ -82,48 +83,34 @@ const NavBar: React.FC = () => {
                   >
                     Edit Profile
                   </Nav.Link>,
+                ]
+              : ''}
+
+            {/* Admin log in has admin dashboard */}
+            {currentUser && role === 'ADMIN'
+              ? [
                   <Nav.Link
-                    id="matching-nav"
-                    href="/matching"
-                    key="matching"
-                    active={pathName === '/matching'}
+                    id="admin-dashboard-nav"
+                    href="/admin/dashboard"
+                    key="admin-dashboard"
+                    active={pathName === '/admin/dashboard'}
                   >
-                    Find your match!
+                    Admin Dashboard
                   </Nav.Link>,
                   <Nav.Link
-                    id="search-nav"
-                    href="/search"
-                    key="search"
-                    active={pathName === '/search'}
+                    id="manage-users-nav"
+                    href="/admin/manage-users"
+                    key="manage-users"
+                    active={pathName === '/admin/manage-users'}
                   >
-                    Search for Roomies!
-                  </Nav.Link>,
-                  <Nav.Link
-                    id="create-profile-nav"
-                    href="/create-profile"
-                    key="create-profile"
-                    active={pathName === '/create-profile'}
-                  >
-                    Create Profile
+                    Manage Users
                   </Nav.Link>,
                 ]
               : ''}
-            {/* {currentUser && role === 'ADMIN' ? (
-              <Nav.Link
-                id="admin-stuff-nav"
-                href="/admin"
-                key="admin"
-                active={pathName === '/admin'}
-              >
-                My Messages
-              </Nav.Link>
-            ) : (
-              ''
-            )} */}
           </Nav>
           <Nav>
             {session ? (
-              <NavDropdown id="login-dropdown" title={currentUser}>
+              <NavDropdown id="login-dropdown" title={currentUser} align="end">
                 <NavDropdown.Item
                   id="login-dropdown-sign-out"
                   href="/api/auth/signout"
