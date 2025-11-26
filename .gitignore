@@ -48,3 +48,15 @@ settings.production.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Ignore Prettier config
+.prettierrc/
+
+# Ignore ESLint config (if you want)
+.eslintrc.json/
+
+# Ignore package-lock.json
+.package-lock.json
+.package.json
+
+

@@ -22,3 +22,20 @@
 .backgroundImage p {
     font-size: 1.5rem;
 }
+
+.custom-button {
+    border: 2px solid white;
+    background-color: transparent;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 1rem;
+    border-radius: 20px;
+}
+
+.custom-button:hover {
+    background-color: white;
+    color: black;
+}
