@@ -74,9 +74,38 @@ const NavBar: React.FC = () => {
                   <Nav.Link id="my-messages-nav" href="/messages" key="messages" active={pathName === '/messages'}>
                     My Messages
                   </Nav.Link>,
-                  <Nav.Link>
-                    {role === 'ADMIN' ? 'Admin' : 'User'} Dashboard
-                  </Nav.Link>
+                  <Nav.Link
+                    id="edit-profile-nav"
+                    href="/edit-profile"
+                    key="edit-profile"
+                    active={pathName === '/edit-profile'}
+                  >
+                    Edit Profile
+                  </Nav.Link>,
+                  <Nav.Link
+                    id="matching-nav"
+                    href="/matching"
+                    key="matching"
+                    active={pathName === '/matching'}
+                  >
+                    Find your match!
+                  </Nav.Link>,
+                  <Nav.Link
+                    id="search-nav"
+                    href="/search"
+                    key="search"
+                    active={pathName === '/search'}
+                  >
+                    Search for Roomies!
+                  </Nav.Link>,
+                  <Nav.Link
+                    id="create-profile-nav"
+                    href="/create-profile"
+                    key="create-profile"
+                    active={pathName === '/create-profile'}
+                  >
+                    Create Profile
+                  </Nav.Link>,
                 ]
               : ''}
             {/* {currentUser && role === 'ADMIN' ? (
