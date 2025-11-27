@@ -1,16 +1,16 @@
 .backgroundImage {
     height: 100vh;
-    background: url('/landing-page-background.jpg');
+    background-image: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('/landing-page-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    color: black;
+    justify-content: center;
+    color: white;
     text-align: center;
-    padding-top: 2rem;
+    /* padding-top: 2rem; */
 }
 
 .backgroundImage h1 {
@@ -21,4 +21,21 @@
 
 .backgroundImage p {
     font-size: 1.5rem;
+}
+
+.custom-button {
+    border: 2px solid white;
+    background-color: transparent;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 1rem;
+    border-radius: 20px;
+}
+
+.custom-button:hover {
+    background-color: white;
+    color: black;
 }
