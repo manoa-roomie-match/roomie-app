@@ -19,7 +19,11 @@ const Home = () => {
           if (session && role === 'ADMIN') {
             return (
               <>
-                <h1>Welcome, {currentUser}!</h1>
+                <h1>
+                  Welcome,
+                  {currentUser}
+                  !
+                </h1>
                 <h2>Manage the Roomie Match platform effectively.</h2>
               </>
             );
@@ -28,7 +32,11 @@ const Home = () => {
           if (session && role === 'USER') {
             return (
               <>
-                <h1>Welcome, {currentUser}!</h1>
+                <h1>
+                  Welcome,
+                  {currentUser}
+                  !
+                </h1>
                 <h2>
                   We&apos;re excited to help you find your perfect roommate.
                 </h2>
@@ -39,8 +47,12 @@ const Home = () => {
             <>
               <h1>Welcome to UH Mānoa Roomie Match</h1>
               <h2>Find your perfect roommate at UH Mānoa</h2>
-              <Link href='/auth/signup' passHref>
-              <button className={styles['custom-button']} type='submit'> Get Started </button>
+              <Link href="/auth/signup" passHref>
+                <button className={styles['custom-button']} type="submit">
+                  {' '}
+                  Get Started
+                  {' '}
+                </button>
               </Link>
             </>
           );
