@@ -45,67 +45,67 @@ const NavBar: React.FC = () => {
             </Nav.Link>
             {!currentUser
               ? [
-                  <Nav.Link href="/contact" active={pathName === '/contact'}>
-                    Contact Us
-                  </Nav.Link>,
-                  <Nav.Link
-                    href="/how-it-works"
-                    active={pathName === '/how-it-works'}
-                  >
-                    How It Works
-                  </Nav.Link>,
-                ]
+                <Nav.Link href="/contact" active={pathName === '/contact'}>
+                  Contact Us
+                </Nav.Link>,
+                <Nav.Link
+                  href="/how-it-works"
+                  active={pathName === '/how-it-works'}
+                >
+                  How It Works
+                </Nav.Link>,
+              ]
               : ''}
 
             {currentUser && role === 'USER'
               ? [
-                  <Nav.Link
-                    id="view-roommate-nav"
-                    href="/view-roommates"
-                    key="view-roommates"
-                    active={pathName === '/view-roommates'}
-                  >
-                    View Roommate Listings
-                  </Nav.Link>,
-                  <Nav.Link
-                    id="my-messages-nav"
-                    href="/messages"
-                    key="messages"
-                    active={pathName === '/messages'}
-                  >
-                    My Messages
-                  </Nav.Link>,
-                  <Nav.Link
-                    id="edit-profile-nav"
-                    href="/edit-profile"
-                    key="edit-profile"
-                    active={pathName === '/edit-profile'}
-                  >
-                    Edit Profile
-                  </Nav.Link>,
-                ]
+                <Nav.Link
+                  id="view-roommate-nav"
+                  href="/view-roommates"
+                  key="view-roommates"
+                  active={pathName === '/view-roommates'}
+                >
+                  View Roommate Listings
+                </Nav.Link>,
+                <Nav.Link
+                  id="my-messages-nav"
+                  href="/messages"
+                  key="messages"
+                  active={pathName === '/messages'}
+                >
+                  My Messages
+                </Nav.Link>,
+                <Nav.Link
+                  id="edit-profile-nav"
+                  href="/edit-profile"
+                  key="edit-profile"
+                  active={pathName === '/edit-profile'}
+                >
+                  Edit Profile
+                </Nav.Link>,
+              ]
               : ''}
 
             {/* Admin log in has admin dashboard */}
             {currentUser && role === 'ADMIN'
               ? [
-                  <Nav.Link
-                    id="admin-dashboard-nav"
-                    href="/admin/dashboard"
-                    key="admin-dashboard"
-                    active={pathName === '/admin/dashboard'}
-                  >
-                    Admin Dashboard
-                  </Nav.Link>,
-                  <Nav.Link
-                    id="manage-users-nav"
-                    href="/admin/manage-users"
-                    key="manage-users"
-                    active={pathName === '/admin/manage-users'}
-                  >
-                    Manage Users
-                  </Nav.Link>,
-                ]
+                <Nav.Link
+                  id="admin-dashboard-nav"
+                  href="/admin/dashboard"
+                  key="admin-dashboard"
+                  active={pathName === '/admin/dashboard'}
+                >
+                  Admin Dashboard
+                </Nav.Link>,
+                <Nav.Link
+                  id="manage-users-nav"
+                  href="/admin/manage-users"
+                  key="manage-users"
+                  active={pathName === '/admin/manage-users'}
+                >
+                  Manage Users
+                </Nav.Link>,
+              ]
               : ''}
           </Nav>
           <Nav>
