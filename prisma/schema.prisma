@@ -1,35 +1,143 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // or "mysql", "sqlite", etc.
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  role     Role   @default(USER)
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Profile Information
+  profile   Profile?
+
+  // NextAuth relations
+  accounts  Account[]
+  sessions  Session[]
+
+  // Roommate matching relations
+  sentMatches     Match[] @relation("MatchSender")
+  receivedMatches Match[] @relation("MatchReceiver")
+  
+  @@map("users")
 }
 
-model Stuff {
-  id        Int       @id @default(autoincrement())
-  name      String
-  quantity  Int
-  condition Condition @default(good)
-  owner     String
+model Profile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Basic Information
+  major              String?
+  year               String? // e.g., "Freshman", "Sophomore", "Junior", "Senior"
+  bio                String?  @db.Text
+  lookingForRoommate Boolean  @default(true)
+
+  // Housing Preferences
+  housingPreference String? // e.g., "On-campus", "Off-campus apartment"
+  moveInDate        DateTime?
+  leaseDuration     String? // e.g., "1 semester", "1 year"
+  budgetMin         Int?
+  budgetMax         Int?
+
+  // Lifestyle & Habits
+  sleepSchedule String? // e.g., "Early Bird (9pm - 6am)", "Night Owl (12am - 9am)"
+  cleanliness   String? // e.g., "Very clean", "Moderately clean", "Relaxed"
+  socialLevel   String? // e.g., "Very social", "Balanced", "Prefer alone time"
+  noiseLevel    String? // e.g., "Quiet", "Moderate", "Don't mind noise"
+  guestPolicy   String? // e.g., "Frequently", "Occasionally", "Rarely", "Never"
+  
+  // Additional Preferences
+  smokingPolicy   String? // e.g., "Non-smoker", "Smoker", "No preference"
+  petPreference   String? // e.g., "Have pets", "Allergic to pets", "Love pets", "No pets"
+  studyHabits     String? // e.g., "Study at home", "Study at library", "Flexible"
+  workSchedule    String? // e.g., "Work from home", "Part-time job", "Full-time student"
+
+  // Arrays stored as JSON
+  preferences String[] // Array of preference strings
+  hobbies     String[] // Array of hobby strings
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profiles")
 }
 
-enum Role {
-  USER
-  ADMIN
+model Match {
+  id         String      @id @default(cuid())
+  senderId   String
+  receiverId String
+  status     MatchStatus @default(PENDING)
+  
+  sender   User @relation("MatchSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("MatchReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  // Optional: Compatibility score
+  compatibilityScore Int?
+
+  // Optional: Message when sending match request
+  message String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([senderId, receiverId])
+  @@map("matches")
 }
 
-enum Condition {
-  excellent
-  good
-  fair
-  poor
+enum MatchStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
