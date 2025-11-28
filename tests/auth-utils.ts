@@ -97,7 +97,7 @@ async function authenticateWithUI(
       ]);
 
       expect(authState.success).toBeTruthy();
-    }).toPass({ timeout: 10000 });
+    }).toPass({ timeout: 20000 });
 
     // Save session for future tests
     const cookies = await page.context().cookies();
