@@ -1,4 +1,4 @@
-name: ci-nextjs-application-template
+name: manoa-roomie-match
 on:
   push:
     branches: [main, master]
