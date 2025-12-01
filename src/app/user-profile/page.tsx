@@ -239,6 +239,7 @@ export default function ProfilePage() {
                 <div>
                   <h2 className="mb-2">
                     {profileData.firstName}
+                    &nbsp;
                     {profileData.lastName}
                   </h2>
                   <div className="mb-3">
