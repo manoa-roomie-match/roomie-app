@@ -52,10 +52,13 @@ export default function ProfilePage() {
       }
 
       try {
+        // pulling data from api
+        // ex: http://localhost:3000/api/student?email=john@foo.com gives john's data
         const response = await fetch(
           `/api/student?email=${encodeURIComponent(session.user.email)}`,
         );
         if (response.ok) {
+          // parse into json if we received data
           const data = await response.json();
           setStudentData(data);
         }
@@ -137,12 +140,19 @@ export default function ProfilePage() {
   };
 
   // Parse hobbies string into array
-  const hobbiesArray = studentData?.hobbies
-    ? studentData.hobbies
-      .split(',')
-      .map((h) => h.trim())
-      .filter((h) => h.length > 0)
-    : [];
+  const hobbiesArray = [];
+
+  if (studentData && studentData.hobbies) {
+    const hobbiesString = studentData.hobbies;
+    const hobbiesList = hobbiesString.split(',');
+
+    for (let i = 0; i < hobbiesList.length; i++) {
+      const hobby = hobbiesList[i].trim();
+      if (hobby.length > 0) {
+        hobbiesArray.push(hobby);
+      }
+    }
+  }
 
   const calculateCompleteness = () => {
     if (!studentData) return 0;
@@ -239,6 +249,7 @@ export default function ProfilePage() {
                 <div>
                   <h2 className="mb-2">
                     {profileData.firstName}
+                    &nbsp;
                     {profileData.lastName}
                   </h2>
                   <div className="mb-3">
@@ -262,6 +273,7 @@ export default function ProfilePage() {
                     %
                   </small>
                 </div>
+                {/* progress bar for profile */}
                 <ProgressBar
                   now={completeness}
                   variant={completeness === 100 ? 'success' : 'primary'}
