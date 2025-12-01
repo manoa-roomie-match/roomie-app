@@ -119,6 +119,13 @@ const NavBar: React.FC = () => {
                   Sign Out
                 </NavDropdown.Item>
                 <NavDropdown.Item
+                  id="login-dropdown-view-profile"
+                  href="/user-profile"
+                >
+                  <PersonFill className="me-1" />
+                  View Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item
                   id="login-dropdown-change-password"
                   href="/auth/change-password"
                 >
