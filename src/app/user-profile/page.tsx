@@ -24,6 +24,8 @@ import {
   FaStar,
 } from 'react-icons/fa';
 
+// type Ratings = 1 | 2 | 3 | 4 | 5;
+
 interface StudentData {
   id: number;
   email: string;
@@ -50,7 +52,9 @@ export default function ProfilePage() {
       }
 
       try {
-        const response = await fetch(`/api/student?email=${encodeURIComponent(session.user.email)}`);
+        const response = await fetch(
+          `/api/student?email=${encodeURIComponent(session.user.email)}`,
+        );
         if (response.ok) {
           const data = await response.json();
           setStudentData(data);
@@ -79,22 +83,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!session) {
-    return (
-      <Container className="text-center mt-5">
-        <Card className="p-5 mx-auto" style={{ maxWidth: '500px' }}>
-          <h3>Sign In Required</h3>
-          <p className="text-muted">
-            You must be signed in to view your profile.
-          </p>
-          <Button variant="primary" href="/api/auth/signin">
-            Sign In
-          </Button>
-        </Card>
-      </Container>
-    );
-  }
-
+  // convert rating enum to number
   const ratingToNumber = (rating: string): number => {
     const ratingMap: { [key: string]: number } = {
       ONE: 1,
@@ -106,13 +95,14 @@ export default function ProfilePage() {
     return ratingMap[rating] || 3;
   };
 
+  // render star rating
   const renderStars = (rating: string) => {
     const numRating = ratingToNumber(rating);
     return (
       <div className="d-flex align-items-center">
-        {[...Array(5)].map((_, i) => (
+        {[0, 1, 2, 3, 4].map((i) => (
           <FaStar
-            key={i}
+            key={`star-${i}`}
             className={i < numRating ? 'text-warning' : 'text-muted'}
             size={18}
           />
@@ -121,19 +111,37 @@ export default function ProfilePage() {
     );
   };
 
+  // Helper function to get rating label
   const getRatingLabel = (rating: string, type: 'cleanliness' | 'noise') => {
     const num = ratingToNumber(rating);
     if (type === 'cleanliness') {
-      const labels = ['', 'Very messy', 'Somewhat messy', 'Moderately clean', 'Clean', 'Very clean'];
-      return labels[num];
-    } else {
-      const labels = ['', 'Very quiet', 'Quiet', 'Moderate', 'Can be noisy', 'Very noisy'];
+      const labels = [
+        '',
+        'Very messy',
+        'Somewhat messy',
+        'Moderately clean',
+        'Clean',
+        'Very clean',
+      ];
       return labels[num];
     }
+    const labels = [
+      '',
+      'Very quiet',
+      'Quiet',
+      'Moderate',
+      'Can be noisy',
+      'Very noisy',
+    ];
+    return labels[num];
   };
 
-  const hobbiesArray = studentData?.hobbies 
-    ? studentData.hobbies.split(',').map(h => h.trim()).filter(h => h.length > 0)
+  // Parse hobbies string into array
+  const hobbiesArray = studentData?.hobbies
+    ? studentData.hobbies
+      .split(',')
+      .map((h) => h.trim())
+      .filter((h) => h.length > 0)
     : [];
 
   const calculateCompleteness = () => {
@@ -147,23 +155,26 @@ export default function ProfilePage() {
       studentData.hobbies,
       studentData.cleanliness,
       studentData.noiseLevels,
-      studentData.profilePicture !== 'https://img.icons8.com/?size=100&id=7820&format=png',
+      studentData.profilePicture,
     ];
-    const completed = fields.filter(f => f && f !== '').length;
+    const completed = fields.filter((f) => f && f !== '').length;
     return Math.round((completed / fields.length) * 100);
   };
 
   const completeness = calculateCompleteness();
+
+  // Profile data with fallbacks
   const profileData = studentData || {
-    firstName: session.user?.name?.split(' ')[0] || 'User',
-    lastName: session.user?.name?.split(' ')[1] || '',
-    email: session.user?.email || '',
+    firstName: session?.user?.name?.split(' ')[0] || 'User',
+    lastName: session?.user?.name?.split(' ')[1] || '',
+    email: session?.user?.email || 'No email',
     major: 'Undeclared',
     bioInfo: 'No bio added yet.',
-    hobbies: '',
+    hobbies: 'None',
     cleanliness: 'THREE',
     noiseLevels: 'THREE',
-    profilePicture: session.user?.image || 'https://img.icons8.com/?size=100&id=7820&format=png',
+    profilePicture:
+      session?.user?.image || 'https://img.icons8.com/?size=100&id=7820&format=png',
   };
 
   return (
@@ -178,7 +189,12 @@ export default function ProfilePage() {
         }}
       >
         <div className="position-absolute top-0 end-0 m-3">
-          <Button variant="light" size="sm" className="me-2" href="/profile/edit">
+          <Button
+            variant="light"
+            size="sm"
+            className="me-2"
+            href="/profile/edit"
+          >
             <FaEdit className="me-2" />
             Edit Profile
           </Button>
@@ -291,7 +307,9 @@ export default function ProfilePage() {
                   <div className="d-flex align-items-start p-3 bg-light rounded">
                     <FaBroom className="me-3 text-success mt-1" size={28} />
                     <div className="flex-grow-1">
-                      <small className="text-muted d-block mb-1">Cleanliness</small>
+                      <small className="text-muted d-block mb-1">
+                        Cleanliness
+                      </small>
                       <strong className="d-block mb-2">
                         {getRatingLabel(profileData.cleanliness, 'cleanliness')}
                       </strong>
@@ -303,7 +321,9 @@ export default function ProfilePage() {
                   <div className="d-flex align-items-start p-3 bg-light rounded">
                     <FaVolumeUp className="me-3 text-warning mt-1" size={28} />
                     <div className="flex-grow-1">
-                      <small className="text-muted d-block mb-1">Noise Tolerance</small>
+                      <small className="text-muted d-block mb-1">
+                        Noise Tolerance
+                      </small>
                       <strong className="d-block mb-2">
                         {getRatingLabel(profileData.noiseLevels, 'noise')}
                       </strong>
@@ -314,15 +334,14 @@ export default function ProfilePage() {
               </Row>
             </Card.Body>
           </Card>
-
           {hobbiesArray.length > 0 && (
             <Card className="shadow-sm border-0 mb-4">
               <Card.Body className="p-4">
                 <h4 className="mb-3">Hobbies & Interests</h4>
                 <div className="d-flex flex-wrap gap-2">
-                  {hobbiesArray.map((hobby, index) => (
+                  {hobbiesArray.map((hobby) => (
                     <Badge
-                      key={index}
+                      key={hobby}
                       bg="light"
                       text="dark"
                       className="px-3 py-2 border"
