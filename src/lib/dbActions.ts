@@ -92,3 +92,68 @@ export async function changePassword(credentials: { email: string; password: str
     },
   });
 }
+
+/** -----------------------------
+ *  Create a new Student profile
+ *  ----------------------------- */
+export async function addStudent(studentData) {
+  await prisma.student.create({
+    data: {
+      email: studentData.email,
+      firstName: studentData.firstName,
+      lastName: studentData.lastName,
+      hobbies: studentData.hobbies,
+      bioInfo: studentData.bioInfo,
+      cleanliness: studentData.cleanliness,
+      noiseLevels: studentData.noiseLevels,
+      major: studentData.major,
+      profilePicture: studentData.profilePicture, // optional, has default
+    },
+  });
+}
+
+/** -----------------------------
+ *  Get a student by email
+ *  ----------------------------- */
+export async function getStudentByEmail(email) {
+  await prisma.student.findUnique({
+    where: { email },
+  });
+}
+
+/** -----------------------------
+ *  Get a student by ID
+ *  ----------------------------- */
+export async function getStudentById(id) {
+  await prisma.student.findUnique({
+    where: { id },
+  });
+}
+
+/** -----------------------------
+ *  Get all students (for listing / matching)
+ *  ----------------------------- */
+export async function getAllStudents() {
+  await prisma.student.findMany({
+    orderBy: { lastName: 'asc' },
+  });
+}
+
+/** -----------------------------
+ *  Update a Student profile
+ *  ----------------------------- */
+export async function updateStudent(id, updatedData) {
+  await prisma.student.update({
+    where: { id },
+    data: {
+      firstName: updatedData.firstName,
+      lastName: updatedData.lastName,
+      hobbies: updatedData.hobbies,
+      bioInfo: updatedData.bioInfo,
+      cleanliness: updatedData.cleanliness,
+      noiseLevels: updatedData.noiseLevels,
+      major: updatedData.major,
+      profilePicture: updatedData.profilePicture,
+    },
+  });
+}
