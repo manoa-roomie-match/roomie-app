@@ -1,6 +1,6 @@
 .backgroundImage {
-    height: 100vh;
-    background-image: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('/landing-page-background.jpg');
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('/landing-page-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -10,13 +10,20 @@
     justify-content: center;
     color: white;
     text-align: center;
-    /* padding-top: 2rem; */
 }
 
 .backgroundImage h1 {
-    font-size: 4rem;
+    font-size: 3.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.backgroundImage h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    opacity: 0.95;
 }
 
 .backgroundImage p {
@@ -27,15 +34,125 @@
     border: 2px solid white;
     background-color: transparent;
     color: white;
-    padding: 0.5rem 1rem;
-    font-size: 1.25rem;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    margin-top: 1rem;
-    border-radius: 20px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
 }
 
 .custom-button:hover {
     background-color: white;
-    color: black;
+    color: #225824;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.hero {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: white;
+    max-width: 1000px;
+}
+
+.subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.custom-button-secondary {
+    background: transparent;
+    border: 2px solid white;
+    color: #225824;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-button-secondary:hover {
+    background: white;
+    color: #225824;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(129, 129, 129, 0.3);
+}
+
+.small-button {
+    background: #225824;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.small-button:hover {
+    background: #1a4219;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 88, 36, 0.3);
+}
+
+.actionCard {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    height: 100%;
+}
+
+.actionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .backgroundImage h1 {
+        font-size: 2.5rem;
+    }
+    .backgroundImage h2 {
+        font-size: 1.2rem;
+    }
+    .subtitle {
+        font-size: 1rem;
+    }
+    .hero {
+        padding: 3rem 1rem;
+    }
+    .buttonRow {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .custom-button,
+    .custom-button-secondary {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+.featureCard {
+    transition: transform 0.3s ease;
+    cursor: default;
+}
+
+.featureCard:hover {
+    transform: translateY(-5px);
 }

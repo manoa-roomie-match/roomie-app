@@ -35,3 +35,13 @@
         background-color: #00382A !important;
         color: #F7F3E3 !important;
     }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    #how-it-works,
+    #why-choose-us,
+    #get-started {
+        scroll-margin-top: 80px;
+    }
