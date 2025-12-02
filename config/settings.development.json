@@ -9,5 +9,30 @@
     { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
     { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
     { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
+  ],
+
+  "defaultStudentData": [
+    {
+      "email": "john@foo.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "hobbies": "Cycling, Reading",
+      "bioInfo": "Enthusiastic learner and avid cyclist.",
+      "cleanliness": "THREE",
+      "noiseLevels": "TWO",
+      "major": "Engineering",
+      "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
+    },
+    {
+      "email": "admin@foo.com",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "hobbies": "Surfing, Painting",
+      "bioInfo": "Loves the ocean and creative arts.",
+      "cleanliness": "TWO",
+      "noiseLevels": "ONE",
+      "major": "Art",
+      "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
+    }
   ]
 }

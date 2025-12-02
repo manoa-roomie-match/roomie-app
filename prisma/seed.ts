@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
+import { PrismaClient, Role, Condition, Ratings } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -33,6 +33,28 @@ async function main() {
         quantity: data.quantity,
         owner: data.owner,
         condition,
+      },
+    });
+  }
+  for (const data of config.defaultStudentData) {
+    const cleanliness = data.cleanliness as Ratings || 3;
+    const noiseLevels = data.noiseLevels as Ratings || 3;
+
+    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+    // eslint-disable-next-line no-await-in-loop
+    await prisma.student.upsert({
+      where: { id: config.defaultStudentData.indexOf(data) + 1 },
+      update: {},
+      create: {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        hobbies: data.hobbies,
+        bioInfo: data.bioInfo,
+        cleanliness: cleanliness,
+        noiseLevels: noiseLevels,
+        major: data.major,
+        profilePicture: data.profilePicture,
       },
     });
   }
