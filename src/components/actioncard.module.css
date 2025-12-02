@@ -1,0 +1,45 @@
+.actionCard {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.actionCard .card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.actionCard .card-body>p {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+
+.actionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.small-button {
+    background: #225824;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: auto;
+}
+
+.small-button:hover {
+    background: #1a4219;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 88, 36, 0.3);
+}

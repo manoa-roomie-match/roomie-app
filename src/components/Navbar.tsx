@@ -45,14 +45,11 @@ const NavBar: React.FC = () => {
             </Nav.Link>
             {!currentUser
               ? [
+                <Nav.Link href="/#how-it-works" active={pathName === '/how-it-works'}>
+                  How It Works
+                </Nav.Link>,
                 <Nav.Link href="/contact" active={pathName === '/contact'}>
                   Contact Us
-                </Nav.Link>,
-                <Nav.Link
-                  href="/how-it-works"
-                  active={pathName === '/how-it-works'}
-                >
-                  How It Works
                 </Nav.Link>,
               ]
               : ''}
