@@ -48,7 +48,7 @@ const NavBar: React.FC = () => {
                 <Nav.Link href="/#how-it-works" active={pathName === '/how-it-works'}>
                   How It Works
                 </Nav.Link>,
-                <Nav.Link href="/contact" active={pathName === '/contact'}>
+                <Nav.Link href="/contact-us" active={pathName === '/contact'}>
                   Contact Us
                 </Nav.Link>,
               ]
