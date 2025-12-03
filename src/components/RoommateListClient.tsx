@@ -152,6 +152,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
 
             <StarFilter label="Cleanliness" value={minClean} onChange={setMinClean} />
             <StarFilter label="Noise tolerance" value={minNoise} onChange={setMinNoise} />
+            <StarFilter label="Cleanliness & Noise" value={minCombined} onChange={setMinCombined} />
           </Card.Body>
         </Card>
       </Col>
@@ -159,7 +160,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
       <Col xs={12} md={9}>
         <div className="d-flex flex-wrap gap-3">
           {filtered.map((s) => (
-            <Card key={s.id} className="shadow-sm" style={{ width: '2cm', minWidth: '2cm' }}>
+            <Card key={s.id} className="shadow-sm" style={{ width: '260px' }}>
               <Card.Body className="p-2 d-flex flex-column align-items-center text-center">
                 <div className="fw-bold small mb-2">{`${s.firstName} ${s.lastName}`}</div>
                 <div className="mb-2">
