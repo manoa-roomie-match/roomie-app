@@ -1,6 +1,6 @@
 'use server';
 
-import { Stuff, Condition } from '@prisma/client';
+import { Stuff, Condition, Ratings } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -96,7 +96,17 @@ export async function changePassword(credentials: { email: string; password: str
 /** -----------------------------
  *  Create a new Student profile
  *  ----------------------------- */
-export async function addStudent(studentData) {
+export async function addStudent(studentData: {
+  email: string;
+  firstName: string;
+  lastName: string;
+  hobbies: string;
+  bioInfo: string;
+  cleanliness: Ratings;
+  noiseLevels: Ratings;
+  major: string;
+  profilePicture?: string;
+}) {
   await prisma.student.create({
     data: {
       email: studentData.email,
@@ -115,7 +125,7 @@ export async function addStudent(studentData) {
 /** -----------------------------
  *  Get a student by email
  *  ----------------------------- */
-export async function getStudentByEmail(email) {
+export async function getStudentByEmail(email: string) {
   await prisma.student.findUnique({
     where: { email },
   });
@@ -124,7 +134,7 @@ export async function getStudentByEmail(email) {
 /** -----------------------------
  *  Get a student by ID
  *  ----------------------------- */
-export async function getStudentById(id) {
+export async function getStudentById(id: number) {
   await prisma.student.findUnique({
     where: { id },
   });
@@ -142,7 +152,17 @@ export async function getAllStudents() {
 /** -----------------------------
  *  Update a Student profile
  *  ----------------------------- */
-export async function updateStudent(id, updatedData) {
+export async function updateStudent(id: number, updatedData: {
+  email: string;
+  firstName: string;
+  lastName: string;
+  hobbies: string;
+  bioInfo: string;
+  cleanliness: Ratings;
+  noiseLevels: Ratings;
+  major: string;
+  profilePicture?: string;
+}) {
   await prisma.student.update({
     where: { id },
     data: {
