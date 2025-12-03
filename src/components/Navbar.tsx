@@ -80,6 +80,9 @@ const NavBar: React.FC = () => {
                 >
                   Edit Profile
                 </Nav.Link>,
+                <Nav.Link href="/create-profile" active={pathName === '/create-profile'}>
+                Create Profile
+                </Nav.Link>,
               ]
               : ''}
 

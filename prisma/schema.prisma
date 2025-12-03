@@ -27,7 +27,7 @@ model Student {
   email           String    @unique
   firstName       String
   lastName        String
-  hobbies         String
+  hobbies         String[]
   bioInfo         String
   cleanliness     Ratings
   noiseLevels     Ratings
