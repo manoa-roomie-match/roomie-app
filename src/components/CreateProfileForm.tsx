@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { Button, Card, Col, Container, Form, Row, Image, FormControlProps } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form, Row, Image } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { redirect } from 'next/navigation';
@@ -32,31 +32,31 @@ const CreateProfileForm: React.FC = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
-  const onSubmit = async (submitData: { email: string, firstName: string, lastName: string, 
+  const onSubmit = async (submitData: { email: string, firstName: string, lastName: string,
     hobbies: (string | undefined)[], bioInfo: string,
-    cleanliness: "THREE" | "TWO" | "ONE" | "FOUR" | "FIVE",
-    noiseLevels: "THREE" | "TWO" | "ONE" | "FOUR" | "FIVE",
-    major: string}) => {
-      // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
-      console.log('Submitted student profile data:', submitData);
-      try {
+    cleanliness: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
+    noiseLevels: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
+    major: string }) => {
+    // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
+    console.log('Submitted student profile data:', submitData);
+    try {
       let profilePicture = null;
 
       // 1. Upload to Supabase Storage if a file was selected
       if (photoFile) {
-      const form = new FormData();
-      form.append("file", photoFile);
+        const form = new FormData();
+        form.append('file', photoFile);
 
-      const uploadRes = await fetch("/api/upload", {
-      method: "POST",
-      body: form,
-      });
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: form,
+        });
 
-      const uploadData = await uploadRes.json();
-      profilePicture = uploadData.publicUrl;
+        const uploadData = await uploadRes.json();
+        profilePicture = uploadData.publicUrl;
       }
-      console.log(profilePicture)
-      const cleanedHobbies = submitData.hobbies.filter((hobby): hobby is string => typeof hobby === "string");
+      console.log(profilePicture);
+      const cleanedHobbies = submitData.hobbies.filter((hobby): hobby is string => typeof hobby === 'string');
       await addStudent({
         ...submitData,
         hobbies: cleanedHobbies,
@@ -64,19 +64,19 @@ const CreateProfileForm: React.FC = () => {
       });
 
       swal('Success', 'Your item has been added', 'success', {
-      timer: 2000,
+        timer: 2000,
       });
-      } catch (err) {
-        console.error(err);
-        swal("Error", "Failed to save profile", "error");
-      }
-      };
+    } catch (err) {
+      console.error(err);
+      swal('Error', 'Failed to save profile', 'error');
+    }
+  };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     console.log('Selected file:', file);
     if (!file) return;
-  
+
     setPhotoFile(file);
     setPreview(URL.createObjectURL(file));
   };
@@ -84,37 +84,37 @@ const CreateProfileForm: React.FC = () => {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Container className="py-3">
-        <Row className='justify-content-center'>
+        <Row className="justify-content-center">
           <Col className="text-center">
             <h1>Create Profile</h1>
           </Col>
         </Row>
         <Row className="justify-content-center">
           <Col xs={4}>
-              <Card>
-                <Card.Header className='text-center'>
-                    <h2>Upload profile pic</h2>
-                </Card.Header>
-                <Card.Body className="text-center">
-                  {preview && (
-                    <Image
-                      src={preview}
-                      alt="Profile Preview"
-                      roundedCircle
-                      fluid
-                      style={{ width: "150px", height: "150px", objectFit: "cover" }}
-                    />
-                  )}
-                  <Form.Group className="mt-3">
-                    <Form.Label>Choose a profile picture</Form.Label>
-                    <Form.Control
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(e as React.ChangeEvent<HTMLInputElement>)}
-                    />
-                  </Form.Group>
-                </Card.Body>
-              </Card>
+            <Card>
+              <Card.Header className="text-center">
+                <h2>Upload profile pic</h2>
+              </Card.Header>
+              <Card.Body className="text-center">
+                {preview && (
+                  <Image
+                    src={preview}
+                    alt="Profile Preview"
+                    roundedCircle
+                    fluid
+                    style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                  />
+                )}
+                <Form.Group className="mt-3">
+                  <Form.Label>Choose a profile picture</Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e as React.ChangeEvent<HTMLInputElement>)}
+                  />
+                </Form.Group>
+              </Card.Body>
+            </Card>
           </Col>
           <Col xs={6}>
             <Card>
@@ -122,7 +122,7 @@ const CreateProfileForm: React.FC = () => {
                 <Row>
                   <Col>
                     <Form.Group>
-                    <input type="hidden" {...register('email')} value={currentUser} />
+                      <input type="hidden" {...register('email')} value={currentUser} />
                       <Form.Label>First Name</Form.Label>
                       <input
                         type="text"
@@ -171,7 +171,7 @@ const CreateProfileForm: React.FC = () => {
                     <Form.Group>
                       <Form.Label>Noise Level</Form.Label>
                       <select {...register('noiseLevels')} className={`form-control ${errors.noiseLevels ? 'is-invalid' : ''}`}>
-                      `<option value="FIVE">5</option>
+                        <option value="FIVE">5</option>
                         <option value="FOUR">4</option>
                         <option value="THREE">3</option>
                         <option value="TWO">2</option>
@@ -200,27 +200,27 @@ const CreateProfileForm: React.FC = () => {
                       <CreatableSelect
                         {...field}
                         options={[
-                          { value: "Surfing", label: "Surfing" },
-                          { value: "Painting", label: "Painting" },
-                          { value: "Reading", label: "Reading" },
-                          { value: "Cooking", label: "Cooking" },
-                          { value: "Gaming", label: "Gaming" },
-                          { value: "Hiking", label: "Hiking" },
-                          { value: "Photography", label: "Photography" },
-                          { value: "Music", label: "Music" },
-                          { value: "Traveling", label: "Traveling" },
-                          { value: "Writing", label: "Writing" }
+                          { value: 'Surfing', label: 'Surfing' },
+                          { value: 'Painting', label: 'Painting' },
+                          { value: 'Reading', label: 'Reading' },
+                          { value: 'Cooking', label: 'Cooking' },
+                          { value: 'Gaming', label: 'Gaming' },
+                          { value: 'Hiking', label: 'Hiking' },
+                          { value: 'Photography', label: 'Photography' },
+                          { value: 'Music', label: 'Music' },
+                          { value: 'Traveling', label: 'Traveling' },
+                          { value: 'Writing', label: 'Writing' },
                         ]}
                         isMulti
                         onChange={(opts) => field.onChange(opts.map(o => o.value))}
                         value={
                           field.value
                             ? field.value
-                                .filter((v): v is string => typeof v === 'string')
-                                .map((v) => ({ value: v, label: v }))
+                              .filter((v): v is string => typeof v === 'string')
+                              .map((v) => ({ value: v, label: v }))
                             : []
                         }
-                        className={errors.hobbies ? "is-invalid" : ""}
+                        className={errors.hobbies ? 'is-invalid' : ''}
                       />
                     )}
                   />
@@ -228,7 +228,6 @@ const CreateProfileForm: React.FC = () => {
                     {errors.hobbies?.message}
                   </div>
                 </Form.Group>
-
 
                 <Form.Group className="form-group">
                   <Row className="pt-3">
