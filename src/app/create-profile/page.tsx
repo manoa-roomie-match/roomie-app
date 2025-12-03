@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Image } from 'react-bootstrap';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
+import CreateProfileForm from '@/components/CreateProfileForm';
 
 /** Render a list of stuff for the logged in user. */
 const CreateProfilePage = async () => {
@@ -19,14 +20,7 @@ const CreateProfilePage = async () => {
     <main>
       <Container id="create-profile" fluid className="py-3">
         <Row>
-          <Col>
-            <h1>Create Profile</h1>
-            <Image
-              src="/create-profile.jpg"
-              alt="Create Profile"
-              fluid
-            />
-          </Col>
+          <CreateProfileForm />
         </Row>
       </Container>
     </main>
