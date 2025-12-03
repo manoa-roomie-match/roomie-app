@@ -20,16 +20,6 @@ const CreateProfilePage = async () => {
     <main>
       <Container id="create-profile" fluid className="py-3">
         <Row>
-          <Col>
-            <h1>Create Profile</h1>
-            <Image
-              src="/create-profile.jpg"
-              alt="Create Profile"
-              fluid
-            />
-          </Col>
-        </Row>
-        <Row>
           <CreateProfileForm />
         </Row>
       </Container>

@@ -5,7 +5,7 @@ import { Button, Card, Col, Container, Form, Row, Image, FormControlProps } from
 import { Controller, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { redirect } from 'next/navigation';
-import { addStuff } from '@/lib/dbActions';
+import { addStudent } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddStudentSchema } from '@/lib/validationSchemas';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -40,7 +40,7 @@ const CreateProfileForm: React.FC = () => {
       // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
       console.log('Submitted student profile data:', submitData);
       try {
-      let photo_url = null;
+      let profilePicture = null;
 
       // 1. Upload to Supabase Storage if a file was selected
       if (photoFile) {
@@ -53,18 +53,22 @@ const CreateProfileForm: React.FC = () => {
       });
 
       const uploadData = await uploadRes.json();
-      photo_url = uploadData.publicUrl;
+      profilePicture = uploadData.publicUrl;
       }
-
-      console.log('Photo URL:', photo_url);
-      // await addStuff(submitData);
+      console.log(profilePicture)
+      const cleanedHobbies = submitData.hobbies.filter((hobby): hobby is string => typeof hobby === "string");
+      await addStudent({
+        ...submitData,
+        hobbies: cleanedHobbies,
+        profilePicture,
+      });
 
       swal('Success', 'Your item has been added', 'success', {
       timer: 2000,
       });
       } catch (err) {
-      console.error(err);
-      swal("Error", "Failed to save profile", "error");
+        console.error(err);
+        swal("Error", "Failed to save profile", "error");
       }
       };
 
@@ -106,7 +110,7 @@ const CreateProfileForm: React.FC = () => {
                     <Form.Control
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleImageChange(e)}
+                      onChange={(e) => handleImageChange(e as React.ChangeEvent<HTMLInputElement>)}
                     />
                   </Form.Group>
                 </Card.Body>
