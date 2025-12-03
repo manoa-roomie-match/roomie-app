@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Ratings } from '@prisma/client';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Badge, Button, Card, Col, Form, Image, Row, Stack } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
 
@@ -88,6 +88,7 @@ type ListClientProps = {
 };
 
 const RoommateListClient = ({ students }: ListClientProps) => {
+  const router = useRouter();
   const [nameFilter, setNameFilter] = React.useState('');
   const [hobbyFilter, setHobbyFilter] = React.useState('');
   const [majorFilter, setMajorFilter] = React.useState('');
@@ -193,12 +194,10 @@ const RoommateListClient = ({ students }: ListClientProps) => {
                   {renderStars(s.noiseLevels, 12)}
                   <div className="d-grid mt-2">
                     {/*
-                      Use Link when we have a corresponding user account so we can deep link into the messages page.
-                      Button remains disabled without a userId to avoid broken navigation.
+                      Navigate to messages when there is a linked user account; keep the button disabled if none exists.
                     */}
                     <Button
-                      as={s.userId ? Link : 'button'}
-                      href={s.userId ? `/messages?with=${s.userId}` : undefined}
+                      onClick={() => s.userId && router.push(`/messages?with=${s.userId}`)}
                       variant="success"
                       size="sm"
                       disabled={!s.userId}
