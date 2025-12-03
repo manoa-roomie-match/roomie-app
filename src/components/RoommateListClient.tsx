@@ -2,11 +2,13 @@
 
 import React from 'react';
 import { Ratings } from '@prisma/client';
-import { Badge, Card, Col, Form, Image, Row, Stack } from 'react-bootstrap';
+import { useRouter } from 'next/navigation';
+import { Badge, Button, Card, Col, Form, Image, Row, Stack } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
 
 export type StudentListEntry = {
   id: number;
+  email: string;
   firstName: string;
   lastName: string;
   hobbies: string;
@@ -14,6 +16,7 @@ export type StudentListEntry = {
   noiseLevels: Ratings;
   major: string;
   profilePicture: string;
+  userId: number | null;
 };
 
 const ratingToNumber = (rating: Ratings): number => {
@@ -85,6 +88,7 @@ type ListClientProps = {
 };
 
 const RoommateListClient = ({ students }: ListClientProps) => {
+  const router = useRouter();
   const [nameFilter, setNameFilter] = React.useState('');
   const [hobbyFilter, setHobbyFilter] = React.useState('');
   const [majorFilter, setMajorFilter] = React.useState('');
@@ -188,6 +192,19 @@ const RoommateListClient = ({ students }: ListClientProps) => {
                   {renderStars(s.cleanliness, 12)}
                   <div className="small text-muted mt-1">Noise</div>
                   {renderStars(s.noiseLevels, 12)}
+                  <div className="d-grid mt-2">
+                    {/*
+                      Navigate to messages when there is a linked user account; keep the button disabled if none exists.
+                    */}
+                    <Button
+                      onClick={() => s.userId && router.push(`/messages?with=${s.userId}`)}
+                      variant="success"
+                      size="sm"
+                      disabled={!s.userId}
+                    >
+                      Send Message
+                    </Button>
+                  </div>
                 </Stack>
               </Card.Body>
             </Card>

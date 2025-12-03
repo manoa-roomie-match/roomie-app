@@ -33,6 +33,28 @@
       "noiseLevels": "ONE",
       "major": "Art",
       "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
+    },
+    {
+      "email": "jack@foo.com",
+      "firstName": "jack",
+      "lastName": "Brown",
+      "hobbies": "Gaming, Cooking",
+      "bioInfo": "Tech enthusiast and foodie.",
+      "cleanliness": "FIVE",
+      "noiseLevels": "THREE",
+      "major": "Computer Science",
+      "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
+    },
+    {
+      "email": "jessica@foo.com",
+      "firstName": "Jessica",
+      "lastName": "Lee",
+      "hobbies": "Dancing, Traveling",
+      "bioInfo": "Adventurous spirit with a love for dance.",
+      "cleanliness": "FOUR",
+      "noiseLevels": "TWO",
+      "major": "Business",
+      "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
     }
   ]
 }
