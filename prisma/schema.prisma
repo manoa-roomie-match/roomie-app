@@ -12,6 +12,8 @@ model User {
   email    String @unique
   password String
   role     Role   @default(USER)
+  sentMessages     Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
 }
 
 model Stuff {
@@ -53,4 +55,16 @@ enum Condition {
   good
   fair
   poor
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  content    String
+  createdAt  DateTime @default(now())
+  readAt     DateTime?
+
+  sender   User @relation("sentMessages", fields: [senderId], references: [id])
+  receiver User @relation("receivedMessages", fields: [receiverId], references: [id])
 }
