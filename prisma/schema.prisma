@@ -23,16 +23,16 @@ model Stuff {
 }
 
 model Student {
-  id              Int       @id @default(autoincrement())
-  email           String    @unique
-  firstName       String
-  lastName        String
-  hobbies         String
-  bioInfo         String
-  cleanliness     Ratings
-  noiseLevels     Ratings
-  major           String
-  profilePicture  String    @default("https://img.icons8.com/?size=100&id=7820&format=png")
+  id             Int     @id @default(autoincrement())
+  email          String  @unique
+  firstName      String
+  lastName       String
+  hobbies        String
+  bioInfo        String
+  cleanliness    Ratings
+  noiseLevels    Ratings
+  major          String
+  profilePicture String  @default("https://img.icons8.com/?size=100&id=7820&format=png")
 }
 
 enum Ratings {
