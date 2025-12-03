@@ -3,9 +3,24 @@ import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE!);
+const getSupabaseClient = () => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
+  if (!supabaseUrl || !supabaseServiceRole) {
+    return null;
+  }
+  return createClient(supabaseUrl, supabaseServiceRole);
+};
 
 export async function POST(req: Request) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return NextResponse.json(
+      { error: 'Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE.' },
+      { status: 500 },
+    );
+  }
+
   const formData = await req.formData();
   const file = formData.get('file') as File;
 
