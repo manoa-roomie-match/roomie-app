@@ -31,7 +31,7 @@ interface StudentData {
   email: string;
   firstName: string;
   lastName: string;
-  hobbies: string;
+  hobbies: string[];
   bioInfo: string;
   cleanliness: string;
   noiseLevels: string;
@@ -139,20 +139,10 @@ export default function ProfilePage() {
     return labels[num];
   };
 
-  // Parse hobbies string into array
-  const hobbiesArray = [];
-
-  if (studentData && studentData.hobbies) {
-    const hobbiesString = studentData.hobbies;
-    const hobbiesList = hobbiesString.split(',');
-
-    for (let i = 0; i < hobbiesList.length; i++) {
-      const hobby = hobbiesList[i].trim();
-      if (hobby.length > 0) {
-        hobbiesArray.push(hobby);
-      }
-    }
-  }
+  // studentData.hobbies = ["running", "hiking"]
+  // check if studentData exists, if exist, store the hobbies data into hobbiesArray,
+  // otherwise empty array
+  const hobbiesArray = studentData?.hobbies || [];
 
   const calculateCompleteness = () => {
     if (!studentData) return 0;
