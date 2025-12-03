@@ -2,15 +2,7 @@
 
 import React from 'react';
 import { Ratings } from '@prisma/client';
-import {
-  Badge,
-  Card,
-  Col,
-  Form,
-  Image,
-  Row,
-  Stack,
-} from 'react-bootstrap';
+import { Badge, Card, Col, Form, Image, Row, Stack } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
 
 export type StudentListEntry = {
@@ -118,39 +110,23 @@ const RoommateListClient = ({ students }: ListClientProps) => {
       const passesMajor = !majorTerm || major.includes(majorTerm);
       const passesClean = minClean === 0 || cleanNum >= minClean;
       const passesNoise = minNoise === 0 || noiseNum >= minNoise;
-      const passesCombined = minCombined === 0
-        || (cleanNum >= minCombined && noiseNum >= minCombined);
+      const passesCombined = minCombined === 0 || (cleanNum >= minCombined && noiseNum >= minCombined);
 
-      return (
-        passesName
-        && passesHobby
-        && passesMajor
-        && passesClean
-        && passesNoise
-        && passesCombined
-      );
+      return passesName && passesHobby && passesMajor && passesClean && passesNoise && passesCombined;
     });
-  }, [
-    students,
-    nameFilter,
-    hobbyFilter,
-    majorFilter,
-    minClean,
-    minNoise,
-    minCombined,
-  ]);
+  }, [students, nameFilter, hobbyFilter, majorFilter, minClean, minNoise, minCombined]);
 
   return (
     <Row>
       <Col xs={12} md={3} className="mb-4">
         <Card className="shadow-sm">
           <Card.Body>
-            <Card.Title className="mb-3">篩選條件</Card.Title>
+            <Card.Title className="mb-3">Filtering criteria</Card.Title>
             <Form.Group className="mb-3" controlId="filter-name">
-              <Form.Label>名字</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="輸入姓名"
+                placeholder="Enter name"
                 value={nameFilter}
                 onChange={(e) => setNameFilter(e.target.value)}
               />
@@ -159,7 +135,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
               <Form.Label>Hobbie</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="輸入興趣"
+                placeholder="Enter interests"
                 value={hobbyFilter}
                 onChange={(e) => setHobbyFilter(e.target.value)}
               />
@@ -168,27 +144,14 @@ const RoommateListClient = ({ students }: ListClientProps) => {
               <Form.Label>Major</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="輸入科系"
+                placeholder="Enter major"
                 value={majorFilter}
                 onChange={(e) => setMajorFilter(e.target.value)}
               />
             </Form.Group>
 
-            <StarFilter
-              label="Cleanliness"
-              value={minClean}
-              onChange={setMinClean}
-            />
-            <StarFilter
-              label="Noise tolerance"
-              value={minNoise}
-              onChange={setMinNoise}
-            />
-            <StarFilter
-              label="Cleanliness & Noise"
-              value={minCombined}
-              onChange={setMinCombined}
-            />
+            <StarFilter label="Cleanliness" value={minClean} onChange={setMinClean} />
+            <StarFilter label="Noise tolerance" value={minNoise} onChange={setMinNoise} />
           </Card.Body>
         </Card>
       </Col>
@@ -196,11 +159,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
       <Col xs={12} md={9}>
         <div className="d-flex flex-wrap gap-3">
           {filtered.map((s) => (
-            <Card
-              key={s.id}
-              className="shadow-sm"
-              style={{ width: '2cm', minWidth: '2cm' }}
-            >
+            <Card key={s.id} className="shadow-sm" style={{ width: '2cm', minWidth: '2cm' }}>
               <Card.Body className="p-2 d-flex flex-column align-items-center text-center">
                 <div className="fw-bold small mb-2">{`${s.firstName} ${s.lastName}`}</div>
                 <div className="mb-2">
@@ -219,9 +178,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
                   <div className="small text-muted">Hobbie</div>
                   <div className="small fw-semibold">{s.hobbies || 'N/A'}</div>
                   <div className="small text-muted mt-1">Roommate type</div>
-                  <div className="small fw-semibold">
-                    {deriveRoommateType(s.cleanliness, s.noiseLevels)}
-                  </div>
+                  <div className="small fw-semibold">{deriveRoommateType(s.cleanliness, s.noiseLevels)}</div>
                   <div className="small text-muted mt-1">Major</div>
                   <Badge bg="light" text="dark" className="fw-normal small">
                     {s.major || 'Undeclared'}
@@ -234,9 +191,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
               </Card.Body>
             </Card>
           ))}
-          {filtered.length === 0 && (
-            <div className="text-muted">No roommates match your filters.</div>
-          )}
+          {filtered.length === 0 && <div className="text-muted">No roommates match your filters.</div>}
         </div>
       </Col>
     </Row>
