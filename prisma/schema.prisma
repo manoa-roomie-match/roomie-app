@@ -12,6 +12,8 @@ model User {
   email    String @unique
   password String
   role     Role   @default(USER)
+  sentMessages     Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
 }
 
 model Stuff {
@@ -23,16 +25,16 @@ model Stuff {
 }
 
 model Student {
-  id             Int     @id @default(autoincrement())
-  email          String  @unique
-  firstName      String
-  lastName       String
-  hobbies        String
-  bioInfo        String
-  cleanliness    Ratings
-  noiseLevels    Ratings
-  major          String
-  profilePicture String  @default("https://img.icons8.com/?size=100&id=7820&format=png")
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  firstName       String
+  lastName        String
+  hobbies         String[]
+  bioInfo         String
+  cleanliness     Ratings
+  noiseLevels     Ratings
+  major           String
+  profilePicture  String    @default("https://img.icons8.com/?size=100&id=7820&format=png")
 }
 
 enum Ratings {
@@ -53,4 +55,16 @@ enum Condition {
   good
   fair
   poor
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  content    String
+  createdAt  DateTime @default(now())
+  readAt     DateTime?
+
+  sender   User @relation("sentMessages", fields: [senderId], references: [id])
+  receiver User @relation("receivedMessages", fields: [receiverId], references: [id])
 }

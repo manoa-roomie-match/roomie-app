@@ -4,30 +4,51 @@ import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
+const hashCache = new Map<string, string>();
+
+const hashPassword = async (plain: string) => {
+  if (!hashCache.has(plain)) {
+    hashCache.set(plain, await hash(plain, 10));
+  }
+  return hashCache.get(plain) as string;
+};
+
 async function main() {
   console.log('Seeding the database');
-  const password = await hash('changeme', 10);
-  config.defaultAccounts.forEach(async (account) => {
-    const role = account.role as Role || Role.USER;
-    console.log(`  Creating user: ${account.email} with role: ${role}`);
+  for (const account of config.defaultAccounts) {
+    const role = (account.role as Role) || Role.USER;
+    const password = await hashPassword(account.password || 'changeme');
+    console.log(`  Upserting user: ${account.email} with role: ${role}`);
+    // eslint-disable-next-line no-await-in-loop
     await prisma.user.upsert({
       where: { email: account.email },
-      update: {},
+      update: { role },
       create: {
         email: account.email,
         password,
         role,
       },
     });
-    // console.log(`  Created user: ${user.email} with role: ${user.role}`);
+  }
+
+  config.defaultAccounts.forEach((acct) => {
+    if (!acct.password) {
+      // Intentionally left empty; password defaults handled above.
+    }
   });
-  for (const data of config.defaultData) {
-    const condition = data.condition as Condition || Condition.good;
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+
+  config.defaultData.forEach(async (data, idx) => {
+    const condition = (data.condition as Condition) || Condition.good;
+    console.log(`  Upserting stuff: ${JSON.stringify(data)}`);
     // eslint-disable-next-line no-await-in-loop
     await prisma.stuff.upsert({
-      where: { id: config.defaultData.indexOf(data) + 1 },
-      update: {},
+      where: { id: idx + 1 },
+      update: {
+        name: data.name,
+        quantity: data.quantity,
+        owner: data.owner,
+        condition,
+      },
       create: {
         name: data.name,
         quantity: data.quantity,
@@ -35,16 +56,40 @@ async function main() {
         condition,
       },
     });
-  }
-  for (const data of config.defaultStudentData) {
-    const cleanliness = data.cleanliness as Ratings || 3;
-    const noiseLevels = data.noiseLevels as Ratings || 3;
+  });
 
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+  for (const [idx, data] of config.defaultStudentData.entries()) {
+    const cleanliness = (data.cleanliness as Ratings) || Ratings.THREE;
+    const noiseLevels = (data.noiseLevels as Ratings) || Ratings.THREE;
+    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+    if (!existingUser) {
+      const password = await hashPassword('changeme');
+      console.log(`  Creating missing user for student: ${data.email}`);
+      // eslint-disable-next-line no-await-in-loop
+      await prisma.user.create({
+        data: {
+          email: data.email,
+          password,
+          role: Role.USER,
+        },
+      });
+    }
+
+    console.log(`  Upserting student: ${JSON.stringify(data)}`);
     // eslint-disable-next-line no-await-in-loop
     await prisma.student.upsert({
-      where: { id: config.defaultStudentData.indexOf(data) + 1 },
-      update: {},
+      where: { id: idx + 1 },
+      update: {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        hobbies: data.hobbies,
+        bioInfo: data.bioInfo,
+        cleanliness,
+        noiseLevels,
+        major: data.major,
+        profilePicture: data.profilePicture,
+      },
       create: {
         email: data.email,
         firstName: data.firstName,
