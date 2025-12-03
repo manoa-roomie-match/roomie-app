@@ -17,7 +17,7 @@ const ViewRoommatesPage = async () => {
     } | null,
   );
 
-  const studentsRaw = await prisma.student.findMany({
+  const students = await prisma.student.findMany({
     orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
     select: {
       id: true,
@@ -32,23 +32,15 @@ const ViewRoommatesPage = async () => {
     },
   });
 
-  const emails = studentsRaw.map((s) => s.email);
   const users = await prisma.user.findMany({
-    where: { email: { in: emails } },
+    where: { email: { in: students.map((s) => s.email) } },
     select: { id: true, email: true },
   });
   const userMap = new Map(users.map((u) => [u.email, u.id]));
 
-  const students: StudentListEntry[] = studentsRaw.map((s) => ({
-    id: s.id,
-    userId: userMap.get(s.email),
-    firstName: s.firstName,
-    lastName: s.lastName,
-    hobbies: s.hobbies,
-    cleanliness: s.cleanliness,
-    noiseLevels: s.noiseLevels,
-    major: s.major,
-    profilePicture: s.profilePicture,
+  const studentsWithUserId: StudentListEntry[] = students.map((student) => ({
+    ...student,
+    userId: userMap.get(student.email) ?? null,
   }));
 
   return (
@@ -59,7 +51,7 @@ const ViewRoommatesPage = async () => {
             <h1 className="text-uppercase fw-bold mb-0">list</h1>
           </Col>
         </Row>
-        <RoommateListClient students={students} />
+        <RoommateListClient students={studentsWithUserId} />
       </Container>
     </main>
   );

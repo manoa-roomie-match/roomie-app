@@ -109,12 +109,13 @@ export async function GET(request: NextRequest) {
 
       const targetProfile = await prisma.student.findUnique({
         where: { email: targetUser.email },
-        select: {
-          firstName: true,
-          lastName: true,
-          profilePicture: true,
-        },
+        select: { firstName: true, lastName: true, profilePicture: true },
       });
+      const participant = {
+        userId: targetUser.id,
+        name: targetProfile ? `${targetProfile.firstName} ${targetProfile.lastName}` : targetUser.email,
+        avatar: targetProfile?.profilePicture || DEFAULT_AVATAR,
+      };
 
       await prisma.message.updateMany({
         where: {
@@ -148,12 +149,8 @@ export async function GET(request: NextRequest) {
           createdAt: m.createdAt.toISOString(),
           senderId: m.senderId,
         })),
-        partner: {
-          userId: targetUser.id,
-          name: targetProfile ? `${targetProfile.firstName} ${targetProfile.lastName}` : targetUser.email,
-          avatar: targetProfile?.profilePicture || DEFAULT_AVATAR,
-        },
         currentUserId: currentUser.id,
+        participant,
       });
     }
 

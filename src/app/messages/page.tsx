@@ -1,20 +1,9 @@
 'use client';
 
 import React from 'react';
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Image,
-  InputGroup,
-  ListGroup,
-  Row,
-  Stack,
-} from 'react-bootstrap';
-import { FaPaperPlane, FaCircle } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
+import { Button, Card, Col, Container, Form, Image, InputGroup, ListGroup, Row, Stack } from 'react-bootstrap';
+import { FaPaperPlane, FaCircle } from 'react-icons/fa';
 
 type Conversation = {
   userId: number;
@@ -32,6 +21,12 @@ type ChatMessage = {
   fromSelf: boolean;
 };
 
+type Participant = {
+  userId: number;
+  name: string;
+  avatar: string;
+};
+
 const accentColor = '#66988c';
 const unreadColor = '#004b39';
 
@@ -47,7 +42,13 @@ const MessagePage = () => {
   const [loadingMessages, setLoadingMessages] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const searchParams = useSearchParams();
-  const targetQueryId = searchParams.get('with');
+
+  const initialTargetId = React.useMemo(() => {
+    const param = searchParams.get('with');
+    if (!param) return null;
+    const parsed = Number(param);
+    return Number.isNaN(parsed) ? null : parsed;
+  }, [searchParams]);
 
   const loadMessages = React.useCallback(
     async (userId: number, currentIdOverride?: number) => {
@@ -61,30 +62,40 @@ const MessagePage = () => {
         const data = await res.json();
         const curId = currentIdOverride ?? data.currentUserId ?? currentUserId;
         setCurrentUserId(curId ?? null);
-        const partner = data.partner as { userId: number; name: string; avatar: string } | undefined;
-        const mapped: ChatMessage[] = (data.messages || []).map((m: any) => ({
+        const rawMessages = data.messages || [];
+        const mapped: ChatMessage[] = rawMessages.map((m: any) => ({
           id: m.id,
           text: m.content,
           timestamp: m.createdAt,
           fromSelf: curId ? m.senderId === curId : false,
         }));
+        const lastRaw = rawMessages[rawMessages.length - 1];
+        const { participant }: { participant?: Participant } = data;
         setMessages(mapped);
         setActiveId(userId);
         setConversations((prev) => {
           const existing = prev.find((c) => c.userId === userId);
           if (existing) {
-            return prev.map((c) => (c.userId === userId ? { ...c, unreadCount: 0 } : c));
+            return prev.map((c) => {
+              if (c.userId !== userId) return c;
+              return {
+                ...c,
+                unreadCount: 0,
+                lastMessage: lastRaw?.content ?? c.lastMessage,
+                lastTimestamp: lastRaw?.createdAt ?? c.lastTimestamp,
+              };
+            });
           }
-          if (partner) {
+          if (participant) {
             return [
               ...prev,
               {
-                userId: partner.userId,
-                name: partner.name,
-                avatar: partner.avatar,
+                userId,
+                name: participant.name,
+                avatar: participant.avatar,
                 unreadCount: 0,
-                lastMessage: '',
-                lastTimestamp: '',
+                lastMessage: lastRaw?.content ?? '',
+                lastTimestamp: lastRaw?.createdAt ?? new Date().toISOString(),
               },
             ];
           }
@@ -99,7 +110,7 @@ const MessagePage = () => {
     [currentUserId],
   );
 
-  const loadConversations = React.useCallback(async () => {
+  const loadConversations = React.useCallback(async (preferredId?: number | null) => {
     setLoadingList(true);
     setError(null);
     try {
@@ -110,21 +121,20 @@ const MessagePage = () => {
       const data = await res.json();
       setConversations(data.conversations || []);
       setCurrentUserId(data.currentUserId ?? null);
-      const requestedId = targetQueryId ? Number(targetQueryId) : null;
-      const firstId = requestedId || data.conversations?.[0]?.userId;
-      if (firstId) {
-        await loadMessages(firstId, data.currentUserId);
+      const targetId = preferredId ?? data.conversations?.[0]?.userId;
+      if (targetId) {
+        await loadMessages(targetId, data.currentUserId);
       }
     } catch (err) {
       setError((err as Error).message);
     } finally {
       setLoadingList(false);
     }
-  }, [loadMessages, targetQueryId]);
+  }, [loadMessages]);
 
   React.useEffect(() => {
-    loadConversations();
-  }, [loadConversations, targetQueryId]);
+    loadConversations(initialTargetId);
+  }, [loadConversations, initialTargetId]);
 
   const handleSend = async () => {
     const text = draft.trim();
@@ -147,9 +157,13 @@ const MessagePage = () => {
         fromSelf: true,
       };
       setMessages((prev) => [...prev, newMsg]);
-      setConversations((prev) => prev.map((c) => (c.userId === activeId
-        ? { ...c, lastMessage: text, lastTimestamp: new Date().toISOString() }
-        : c)));
+      setConversations((prev) => {
+        const next = prev.map((c) => {
+          if (c.userId !== activeId) return c;
+          return { ...c, lastMessage: text, lastTimestamp: new Date().toISOString() };
+        });
+        return next;
+      });
       setDraft('');
     } catch (err) {
       setError((err as Error).message);
@@ -164,23 +178,22 @@ const MessagePage = () => {
         <Row className="g-3">
           <Col xs={12} md={3}>
             <Card className="h-100 shadow-sm">
-              <Card.Header className="fw-semibold">訊息</Card.Header>
+              <Card.Header className="fw-semibold">Messages</Card.Header>
               <ListGroup variant="flush" style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-                {loadingList && <ListGroup.Item>載入中...</ListGroup.Item>}
-                {!loadingList && conversations.length === 0 && <ListGroup.Item>目前沒有對話</ListGroup.Item>}
+                {loadingList && <ListGroup.Item>Loading...</ListGroup.Item>}
+                {!loadingList && conversations.length === 0 && <ListGroup.Item>No conversations yet</ListGroup.Item>}
                 {conversations.map((c) => {
                   const isActive = c.userId === activeId;
+                  const itemStyle = isActive
+                    ? { backgroundColor: accentColor, borderColor: accentColor, color: '#fff' }
+                    : {};
                   return (
                     <ListGroup.Item
                       key={c.userId}
                       action
                       onClick={() => loadMessages(c.userId)}
                       active={isActive}
-                      style={isActive ? {
-                        backgroundColor: accentColor,
-                        borderColor: accentColor,
-                        color: '#fff',
-                      } : {}}
+                      style={itemStyle}
                       className="d-flex align-items-center justify-content-between"
                     >
                       <div className="d-flex align-items-center gap-2">
@@ -188,7 +201,7 @@ const MessagePage = () => {
                         <div className="d-flex flex-column">
                           <span className="fw-semibold">{c.name}</span>
                           <small className={isActive ? 'text-light' : 'text-muted'}>
-                            {c.lastMessage ? c.lastMessage.slice(0, 24) : '沒有訊息'}
+                            {c.lastMessage ? c.lastMessage.slice(0, 24) : 'No messages'}
                           </small>
                         </div>
                       </div>
@@ -215,12 +228,12 @@ const MessagePage = () => {
                     <div className="fw-semibold">{activeConversation.name}</div>
                   </>
                 ) : (
-                  <div className="text-muted">選擇一個對話開始聊天</div>
+                  <div className="text-muted">Select a conversation to start chatting</div>
                 )}
               </Card.Header>
               <Card.Body className="d-flex flex-column" style={{ minHeight: '65vh' }}>
                 <div className="flex-grow-1" style={{ overflowY: 'auto' }}>
-                  {loadingMessages && <div className="text-muted">訊息載入中...</div>}
+                  {loadingMessages && <div className="text-muted">Loading messages...</div>}
                   {!loadingMessages && (
                     <Stack gap={3}>
                       {messages.map((m) => (
@@ -243,9 +256,7 @@ const MessagePage = () => {
                           </div>
                         </div>
                       ))}
-                      {!messages.length && !loadingMessages && (
-                        <div className="text-muted">尚未有訊息</div>
-                      )}
+                      {!messages.length && !loadingMessages && <div className="text-muted">No messages yet</div>}
                     </Stack>
                   )}
                 </div>
@@ -253,7 +264,7 @@ const MessagePage = () => {
                 <div className="pt-3 border-top mt-3">
                   <InputGroup>
                     <Form.Control
-                      placeholder="輸入訊息..."
+                      placeholder="Type a message..."
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}
                       onKeyDown={(e) => {
