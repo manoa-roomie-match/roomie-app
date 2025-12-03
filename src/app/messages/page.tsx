@@ -30,9 +30,9 @@ type Participant = {
 const accentColor = '#66988c';
 const unreadColor = '#004b39';
 
-const formatTime = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const formatTime = (iso: string) => new Date(iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-const MessagePage = () => {
+const MessagesContent = () => {
   const [conversations, setConversations] = React.useState<Conversation[]>([]);
   const [activeId, setActiveId] = React.useState<number | null>(null);
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -42,13 +42,6 @@ const MessagePage = () => {
   const [loadingMessages, setLoadingMessages] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const searchParams = useSearchParams();
-
-  const initialTargetId = React.useMemo(() => {
-    const param = searchParams.get('with');
-    if (!param) return null;
-    const parsed = Number(param);
-    return Number.isNaN(parsed) ? null : parsed;
-  }, [searchParams]);
 
   const loadMessages = React.useCallback(
     async (userId: number, currentIdOverride?: number) => {
@@ -110,31 +103,37 @@ const MessagePage = () => {
     [currentUserId],
   );
 
-  const loadConversations = React.useCallback(async (preferredId?: number | null) => {
-    setLoadingList(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/messages', { cache: 'no-store' });
-      if (!res.ok) {
-        throw new Error('Failed to load conversations');
+  const loadConversations = React.useCallback(
+    async (preferredId?: number | null) => {
+      setLoadingList(true);
+      setError(null);
+      try {
+        const res = await fetch('/api/messages', { cache: 'no-store' });
+        if (!res.ok) {
+          throw new Error('Failed to load conversations');
+        }
+        const data = await res.json();
+        setConversations(data.conversations || []);
+        setCurrentUserId(data.currentUserId ?? null);
+        const targetId = preferredId ?? data.conversations?.[0]?.userId;
+        if (targetId) {
+          await loadMessages(targetId, data.currentUserId);
+        }
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoadingList(false);
       }
-      const data = await res.json();
-      setConversations(data.conversations || []);
-      setCurrentUserId(data.currentUserId ?? null);
-      const targetId = preferredId ?? data.conversations?.[0]?.userId;
-      if (targetId) {
-        await loadMessages(targetId, data.currentUserId);
-      }
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoadingList(false);
-    }
-  }, [loadMessages]);
+    },
+    [loadMessages],
+  );
 
   React.useEffect(() => {
-    loadConversations(initialTargetId);
-  }, [loadConversations, initialTargetId]);
+    const withParam = searchParams.get('with');
+    const parsed = withParam ? Number(withParam) : null;
+    const targetId = parsed && !Number.isNaN(parsed) ? parsed : null;
+    loadConversations(targetId);
+  }, [loadConversations, searchParams]);
 
   const handleSend = async () => {
     const text = draft.trim();
@@ -292,5 +291,11 @@ const MessagePage = () => {
     </main>
   );
 };
+
+const MessagePage = () => (
+  <React.Suspense fallback={<div className="p-3">Loading messages...</div>}>
+    <MessagesContent />
+  </React.Suspense>
+);
 
 export default MessagePage;

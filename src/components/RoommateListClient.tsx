@@ -202,7 +202,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
                       size="sm"
                       disabled={!s.userId}
                     >
-                      傳送訊息
+                      Send Message
                     </Button>
                   </div>
                 </Stack>
