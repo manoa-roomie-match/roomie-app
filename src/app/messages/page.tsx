@@ -14,6 +14,7 @@ import {
   Stack,
 } from 'react-bootstrap';
 import { FaPaperPlane, FaCircle } from 'react-icons/fa';
+import { useSearchParams } from 'next/navigation';
 
 type Conversation = {
   userId: number;
@@ -45,6 +46,8 @@ const MessagePage = () => {
   const [loadingList, setLoadingList] = React.useState(false);
   const [loadingMessages, setLoadingMessages] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const targetQueryId = searchParams.get('with');
 
   const loadMessages = React.useCallback(
     async (userId: number, currentIdOverride?: number) => {
@@ -58,6 +61,7 @@ const MessagePage = () => {
         const data = await res.json();
         const curId = currentIdOverride ?? data.currentUserId ?? currentUserId;
         setCurrentUserId(curId ?? null);
+        const partner = data.partner as { userId: number; name: string; avatar: string } | undefined;
         const mapped: ChatMessage[] = (data.messages || []).map((m: any) => ({
           id: m.id,
           text: m.content,
@@ -66,7 +70,26 @@ const MessagePage = () => {
         }));
         setMessages(mapped);
         setActiveId(userId);
-        setConversations((prev) => prev.map((c) => (c.userId === userId ? { ...c, unreadCount: 0 } : c)));
+        setConversations((prev) => {
+          const existing = prev.find((c) => c.userId === userId);
+          if (existing) {
+            return prev.map((c) => (c.userId === userId ? { ...c, unreadCount: 0 } : c));
+          }
+          if (partner) {
+            return [
+              ...prev,
+              {
+                userId: partner.userId,
+                name: partner.name,
+                avatar: partner.avatar,
+                unreadCount: 0,
+                lastMessage: '',
+                lastTimestamp: '',
+              },
+            ];
+          }
+          return prev;
+        });
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -87,7 +110,8 @@ const MessagePage = () => {
       const data = await res.json();
       setConversations(data.conversations || []);
       setCurrentUserId(data.currentUserId ?? null);
-      const firstId = data.conversations?.[0]?.userId;
+      const requestedId = targetQueryId ? Number(targetQueryId) : null;
+      const firstId = requestedId || data.conversations?.[0]?.userId;
       if (firstId) {
         await loadMessages(firstId, data.currentUserId);
       }
@@ -96,11 +120,11 @@ const MessagePage = () => {
     } finally {
       setLoadingList(false);
     }
-  }, [loadMessages]);
+  }, [loadMessages, targetQueryId]);
 
   React.useEffect(() => {
     loadConversations();
-  }, [loadConversations]);
+  }, [loadConversations, targetQueryId]);
 
   const handleSend = async () => {
     const text = draft.trim();
