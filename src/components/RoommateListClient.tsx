@@ -63,7 +63,7 @@ const StarFilter = ({ label, value, onChange }: StarFilterProps) => (
   <div className="mb-3">
     <div className="d-flex justify-content-between align-items-center mb-1">
       <Form.Label className="mb-0">{label}</Form.Label>
-      <small className="text-muted">{value || '任何'}</small>
+      <small className="text-muted">{value || 'any'}</small>
     </div>
     <div className="d-flex gap-1">
       {[1, 2, 3, 4, 5].map((star) => (
