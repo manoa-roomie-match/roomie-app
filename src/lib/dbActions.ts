@@ -126,7 +126,7 @@ export async function addStudent(studentData: {
  *  Get a student by email
  *  ----------------------------- */
 export async function getStudentByEmail(email: string) {
-  await prisma.student.findUnique({
+  return prisma.student.findUnique({
     where: { email },
   });
 }

@@ -1,9 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getStudentByEmail } from '@/lib/dbActions';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl;
+  const { searchParams } = new URL(request.url);
   const email = searchParams.get('email');
 
   if (!email) {
@@ -11,9 +11,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const student = await prisma.student.findUnique({
-      where: { email },
-    });
+    const student = await getStudentByEmail(email);
 
     if (!student) {
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
@@ -21,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(student);
   } catch (error) {
-    console.error('Error fetching student:', error);
-    return NextResponse.json({ error: 'Failed to fetch student' }, { status: 500 });
+    console.error('Database error:', error);
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
   }
 }
