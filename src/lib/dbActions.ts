@@ -107,7 +107,6 @@ export async function addStudent(studentData: {
   major: string;
   profilePicture?: string;
 }) {
-  
   await prisma.student.create({
     data: {
       email: studentData.email,

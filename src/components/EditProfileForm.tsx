@@ -5,18 +5,18 @@ import { Button, Card, Col, Container, Form, Row, Image } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { redirect } from 'next/navigation';
-import { addStudent } from '@/lib/dbActions';
+import { updateStudent } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { AddStudentSchema } from '@/lib/validationSchemas';
+import { EditStudentSchema } from '@/lib/validationSchemas';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ChangeEvent, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
+import { Student } from '@prisma/client';
 
-const CreateProfileForm: React.FC = () => {
-  const [preview, setPreview] = useState<string | null>(null);
+const EditProfileForm = ({ student }: { student: Student }) => {
+  const [preview, setPreview] = useState<string | null>(student.profilePicture);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const { data: session, status } = useSession();
-  const currentUser = session?.user?.email || '';
+  const { status } = useSession();
   const {
     register,
     handleSubmit,
@@ -24,7 +24,7 @@ const CreateProfileForm: React.FC = () => {
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(AddStudentSchema),
+    resolver: yupResolver(EditStudentSchema),
   });
   if (status === 'loading') {
     return <LoadingSpinner />;
@@ -32,44 +32,47 @@ const CreateProfileForm: React.FC = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
-  const onSubmit = async (submitData: {
-    email: string,
-    firstName: string,
-    lastName: string,
-    hobbies: (string | undefined)[],
-    bioInfo: string,
-    cleanliness: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
-    noiseLevels: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
-    major: string
-  }) => {
+  const onSubmit = async (
+    submitData: {
+      email: string;
+      firstName: string;
+      lastName: string;
+      hobbies: (string | undefined)[];
+      bioInfo: string;
+      cleanliness: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE';
+      noiseLevels: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE';
+      major: string;
+    },
+  ) => {
+    // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
     console.log('Submitted student profile data:', submitData);
     try {
-      let profilePicture = null;
-
-      // 1. Upload to Supabase Storage if a file was selected
-      if (photoFile) {
+      let profilePicture: string | undefined;
+      if (photoFile === null) {
+        profilePicture = student.profilePicture;
+      } else {
         const form = new FormData();
         form.append('file', photoFile);
-
         const uploadRes = await fetch('/api/upload', {
           method: 'POST',
           body: form,
         });
-
+        if (!uploadRes.ok) {
+          console.log('cause', uploadRes.statusText);
+          throw new Error('Failed to upload image', { cause: uploadRes.statusText });
+        }
         const uploadData = await uploadRes.json();
         profilePicture = uploadData.publicUrl;
       }
-      console.log(profilePicture);
       const cleanedHobbies = submitData.hobbies.filter(
         (hobby): hobby is string => typeof hobby === 'string',
       );
-      await addStudent({
+      await updateStudent(student.id, {
         ...submitData,
         hobbies: cleanedHobbies,
         profilePicture,
       });
-
-      swal('Success', 'Your item has been added', 'success', {
+      swal('Success', 'Your item has been updated', 'success', {
         timer: 2000,
       });
     } catch (err) {
@@ -81,16 +84,24 @@ const CreateProfileForm: React.FC = () => {
     const file = e.target.files?.[0];
     console.log('Selected file:', file);
     if (!file) return;
-    setPhotoFile(file);
-    setPreview(URL.createObjectURL(file));
+
+    const sanitizedFileName = file.name.replace(/\s+/g, '_');
+    const sanitizedFile = new File([file], sanitizedFileName, { type: file.type });
+
+    setPhotoFile(sanitizedFile);
+    setPreview(URL.createObjectURL(sanitizedFile));
+  };
+
+  const onError = (form_errors: any) => {
+    console.log('FORM ERRORS:', form_errors);
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <Container className="py-3">
         <Row className="justify-content-center">
           <Col className="text-center">
-            <h1>Create Profile</h1>
+            <h1>Edit Profile</h1>
           </Col>
         </Row>
         <Row className="justify-content-center">
@@ -126,12 +137,14 @@ const CreateProfileForm: React.FC = () => {
                 <Row>
                   <Col>
                     <Form.Group>
-                      <input type="hidden" {...register('email')} value={currentUser} />
+                      <input type="hidden" {...register('id')} value={student.id} />
+                      <input type="hidden" {...register('email')} value={student.email} />
                       <Form.Label>First Name</Form.Label>
                       <input
                         type="text"
                         {...register('firstName')}
                         className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
+                        defaultValue={student.firstName}
                       />
                       <div className="invalid-feedback">{errors.firstName?.message}</div>
                     </Form.Group>
@@ -143,6 +156,7 @@ const CreateProfileForm: React.FC = () => {
                         type="text"
                         {...register('lastName')}
                         className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
+                        defaultValue={student.lastName}
                       />
                       <div className="invalid-feedback">{errors.lastName?.message}</div>
                     </Form.Group>
@@ -154,6 +168,7 @@ const CreateProfileForm: React.FC = () => {
                     type="text"
                     {...register('bioInfo')}
                     className={`form-control ${errors.bioInfo ? 'is-invalid' : ''}`}
+                    defaultValue={student.bioInfo}
                   />
                   <div className="invalid-feedback">{errors.bioInfo?.message}</div>
                 </Form.Group>
@@ -164,6 +179,7 @@ const CreateProfileForm: React.FC = () => {
                       <select
                         {...register('cleanliness')}
                         className={`form-control ${errors.cleanliness ? 'is-invalid' : ''}`}
+                        defaultValue={student.cleanliness}
                       >
                         <option value="FIVE">5</option>
                         <option value="FOUR">4</option>
@@ -180,6 +196,7 @@ const CreateProfileForm: React.FC = () => {
                       <select
                         {...register('noiseLevels')}
                         className={`form-control ${errors.noiseLevels ? 'is-invalid' : ''}`}
+                        defaultValue={student.noiseLevels}
                       >
                         <option value="FIVE">5</option>
                         <option value="FOUR">4</option>
@@ -197,15 +214,16 @@ const CreateProfileForm: React.FC = () => {
                     type="text"
                     {...register('major')}
                     className={`form-control ${errors.major ? 'is-invalid' : ''}`}
+                    defaultValue={student.major}
                   />
                   <div className="invalid-feedback">{errors.major?.message}</div>
                 </Form.Group>
-
                 <Form.Group>
                   <Form.Label>Hobbies</Form.Label>
                   <Controller
                     name="hobbies"
                     control={control}
+                    defaultValue={student.hobbies}
                     render={({ field }) => (
                       <CreatableSelect
                         {...field}
@@ -222,12 +240,12 @@ const CreateProfileForm: React.FC = () => {
                           { value: 'Writing', label: 'Writing' },
                         ]}
                         isMulti
-                        onChange={opts => field.onChange(opts.map(o => o.value))}
+                        onChange={(opts) => field.onChange(opts.map(o => o.value))}
                         value={
                           field.value
                             ? field.value
                               .filter((v): v is string => typeof v === 'string')
-                              .map(v => ({ value: v, label: v }))
+                              .map((v) => ({ value: v, label: v }))
                             : []
                         }
                         className={errors.hobbies ? 'is-invalid' : ''}
@@ -258,8 +276,7 @@ const CreateProfileForm: React.FC = () => {
         </Row>
       </Container>
     </Form>
-
   );
 };
 
-export default CreateProfileForm;
+export default EditProfileForm;

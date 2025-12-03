@@ -31,3 +31,21 @@ export const AddStudentSchema = Yup.object({
   // profilePicture: Yup.mixed().optional(),
   // profilePicture: Yup.string().url().optional(),
 });
+
+export const EditStudentSchema = Yup.object({
+  id: Yup.number().required(),
+  email: Yup.string().email().required(),
+  firstName: Yup.string().required(),
+  lastName: Yup.string().required(),
+  hobbies: Yup.array().of(Yup.string()).required(), // <-- fixed
+  bioInfo: Yup.string().required(),
+  cleanliness: Yup.string()
+    .oneOf(['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'])
+    .required(),
+  noiseLevels: Yup.string()
+    .oneOf(['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'])
+    .required(),
+  major: Yup.string().required(),
+  // profilePicture: Yup.mixed().optional(),
+  // profilePicture: Yup.string().url().optional(),
+});

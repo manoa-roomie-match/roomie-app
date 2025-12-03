@@ -1,7 +1,11 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Image } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
+import { Student } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { notFound } from 'next/navigation';
+import EditProfileForm from '@/components/EditProfileForm';
 
 /** Render a list of stuff for the logged in user. */
 const EditProfilePage = async () => {
@@ -13,6 +17,15 @@ const EditProfilePage = async () => {
       // eslint-disable-next-line @typescript-eslint/comma-dangle
     } | null,
   );
+  const email: string | undefined = session?.user?.email ?? undefined;
+  // console.log(id);
+  const student: Student | null = await prisma.student.findUnique({
+    where: { email },
+  });
+  // console.log(stuff);
+  if (!student) {
+    return notFound();
+  }
   // console.log(stuff);
   return (
     <main>
@@ -20,7 +33,7 @@ const EditProfilePage = async () => {
         <Row>
           <Col>
             <h1>Edit Profile</h1>
-            <Image src="/edit_profile.jpg" alt="Profile" fluid />
+            <EditProfileForm student={student} />
           </Col>
         </Row>
       </Container>
