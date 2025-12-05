@@ -1,6 +1,5 @@
 'use client';
 
-/* eslint-disable import/no-extraneous-dependencies */
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';

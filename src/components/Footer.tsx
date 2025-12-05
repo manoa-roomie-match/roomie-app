@@ -12,19 +12,15 @@ const Footer = () => {
     <footer className="uh-footer">
       <Container>
         <Col className="text-center">
-          Department of Information and Computer Sciences
+          321 Manoa Rooms St
           <br />
           University of Hawaii
           <br />
           Honolulu, HI 96822
-          {/* <br /> */}
-          {/* <a href="http://ics-software-engineering.github.io/nextjs-application-template">
-            Template Home Page
-          </a> */}
           {currentUser && (
             <>
               <br />
-              <a href="/contact">Contact Us</a>
+              <a href="/contact-us">Contact Us</a>
             </>
           )}
         </Col>
