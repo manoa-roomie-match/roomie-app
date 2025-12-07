@@ -242,7 +242,7 @@ const Home = () => {
                     perfect roommate.
                   </p>
                   <div className="d-flex gap-3">
-                    <Link href="/contact" passHref className="flex-grow-1">
+                    <Link href="/contact-us" passHref className="flex-grow-1">
                       <button
                         className={`${styles['custom-button-secondary']}`}
                         type="button"
