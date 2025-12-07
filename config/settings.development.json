@@ -1,22 +1,22 @@
 {
-  "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" },
-    { "email": "john@foo.com", "password": "changeme" }
-  ],
+    "defaultAccounts": [
+        { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" },
+        { "email": "john@foo.com", "password": "changeme" }
+    ],
 
-  "defaultData": [
-    { "name": "Basket", "quantity": 3, "owner": "john@foo.com", "condition": "excellent" },
-    { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
-    { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
-    { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
-  ],
+    "defaultData": [
+        { "name": "Basket", "quantity": 3, "owner": "john@foo.com", "condition": "excellent" },
+        { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
+        { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
+        { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
+    ],
 
   "defaultStudentData": [
     {
       "email": "john@foo.com",
       "firstName": "John",
       "lastName": "Doe",
-      "hobbies": "Cycling, Reading",
+      "hobbies": ["Cycling", "Reading"],
       "bioInfo": "Enthusiastic learner and avid cyclist.",
       "cleanliness": "THREE",
       "noiseLevels": "TWO",
@@ -27,11 +27,33 @@
       "email": "admin@foo.com",
       "firstName": "Jane",
       "lastName": "Smith",
-      "hobbies": "Surfing, Painting",
+      "hobbies": ["Surfing", "Painting"],
       "bioInfo": "Loves the ocean and creative arts.",
       "cleanliness": "TWO",
       "noiseLevels": "ONE",
       "major": "Art",
+      "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
+    },
+    {
+      "email": "jack@foo.com",
+      "firstName": "jack",
+      "lastName": "Brown",
+      "hobbies": ["Gaming", "Cooking"],
+      "bioInfo": "Tech enthusiast and foodie.",
+      "cleanliness": "FIVE",
+      "noiseLevels": "THREE",
+      "major": "Computer Science",
+      "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
+    },
+    {
+      "email": "jessica@foo.com",
+      "firstName": "Jessica",
+      "lastName": "Lee",
+      "hobbies": ["Dancing", "Traveling"],
+      "bioInfo": "Adventurous spirit with a love for dance.",
+      "cleanliness": "FOUR",
+      "noiseLevels": "TWO",
+      "major": "Business",
       "profilePicture": "https://img.icons8.com/?size=100&id=7820&format=png"
     }
   ]

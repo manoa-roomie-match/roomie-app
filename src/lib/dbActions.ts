@@ -1,6 +1,6 @@
 'use server';
 
-import { Stuff, Condition } from '@prisma/client';
+import { Stuff, Condition, Ratings } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -89,6 +89,94 @@ export async function changePassword(credentials: { email: string; password: str
     where: { email: credentials.email },
     data: {
       password,
+    },
+  });
+}
+
+/** -----------------------------
+ *  Create a new Student profile
+ *  ----------------------------- */
+export async function addStudent(studentData: {
+  email: string;
+  firstName: string;
+  lastName: string;
+  hobbies: string[];
+  bioInfo: string;
+  cleanliness: Ratings;
+  noiseLevels: Ratings;
+  major: string;
+  profilePicture?: string;
+}) {
+  await prisma.student.create({
+    data: {
+      email: studentData.email,
+      firstName: studentData.firstName,
+      lastName: studentData.lastName,
+      hobbies: studentData.hobbies,
+      bioInfo: studentData.bioInfo,
+      cleanliness: studentData.cleanliness,
+      noiseLevels: studentData.noiseLevels,
+      major: studentData.major,
+      profilePicture: studentData.profilePicture, // optional, has default
+    },
+  });
+}
+
+/** -----------------------------
+ *  Get a student by email
+ *  ----------------------------- */
+export async function getStudentByEmail(email: string) {
+  return prisma.student.findUnique({
+    where: { email },
+  });
+}
+
+/** -----------------------------
+ *  Get a student by ID
+ *  ----------------------------- */
+export async function getStudentById(id: number) {
+  await prisma.student.findUnique({
+    where: { id },
+  });
+}
+
+/** -----------------------------
+ *  Get all students (for listing / matching)
+ *  ----------------------------- */
+export async function getAllStudents() {
+  await prisma.student.findMany({
+    orderBy: { lastName: 'asc' },
+  });
+}
+
+/** -----------------------------
+ *  Update a Student profile
+ *  ----------------------------- */
+export async function updateStudent(
+  id: number,
+  updatedData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    hobbies: string[];
+    bioInfo: string;
+    cleanliness: Ratings;
+    noiseLevels: Ratings;
+    major: string;
+    profilePicture?: string;
+  },
+) {
+  await prisma.student.update({
+    where: { id },
+    data: {
+      firstName: updatedData.firstName,
+      lastName: updatedData.lastName,
+      hobbies: updatedData.hobbies,
+      bioInfo: updatedData.bioInfo,
+      cleanliness: updatedData.cleanliness,
+      noiseLevels: updatedData.noiseLevels,
+      major: updatedData.major,
+      profilePicture: updatedData.profilePicture,
     },
   });
 }
