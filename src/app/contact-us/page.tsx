@@ -20,7 +20,7 @@ export default function ContactUs() {
   const [captchaError, setCaptchaError] = useState(false);
 
   const handleCaptcha = (token: string | null) => {
-    setCapVal(token !== null); // or setCapVal(token !== null);
+    setCapVal(token !== null);
 
     if (token) {
       setCaptchaError(false);
@@ -42,7 +42,6 @@ export default function ContactUs() {
 
     if (!capVal) {
       setCaptchaError(true);
-      // alert('Please complete the reCAPTCHA verification before submitting.');
       return;
     }
 
