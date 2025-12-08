@@ -2,7 +2,7 @@
 
 import { Container, Accordion } from 'react-bootstrap';
 import FAQ from '@/components/FrequentlyAskedQuestion';
-import Link from 'next/link'
+import Link from 'next/link';
 
 export default function FAQPage() {
   const faqs = [
@@ -65,7 +65,7 @@ export default function FAQPage() {
       question: 'Where would I go to look for housing options near the university?',
       answer: (
         <>
-          To find housing, we typically recommend students to use the 
+          To find housing, we typically recommend students to use the
           <Link href="https://offcampushousing.manoa.hawaii.edu/" target="_blank">  University of Hawaii Manoa housing </Link>
           site first.
         </>
