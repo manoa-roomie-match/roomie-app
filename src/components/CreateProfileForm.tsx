@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { Button, Card, Col, Container, Form, Row, Image } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import swal from 'sweetalert';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { addStudent } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddStudentSchema } from '@/lib/validationSchemas';
@@ -26,6 +26,7 @@ const CreateProfileForm: React.FC = () => {
   } = useForm({
     resolver: yupResolver(AddStudentSchema),
   });
+  const router = useRouter();
   if (status === 'loading') {
     return <LoadingSpinner />;
   }
@@ -42,7 +43,7 @@ const CreateProfileForm: React.FC = () => {
     noiseLevels: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
     major: string
   }) => {
-    console.log('Submitted student profile data:', submitData);
+    // console.log('Submitted student profile data:', submitData);
     try {
       let profilePicture = null;
 
@@ -68,9 +69,10 @@ const CreateProfileForm: React.FC = () => {
         hobbies: cleanedHobbies,
         profilePicture,
       });
-
       swal('Success', 'Your item has been added', 'success', {
         timer: 2000,
+      }).then(() => {
+        router.push('/profile');
       });
     } catch (err) {
       console.error(err);
