@@ -93,7 +93,7 @@ const Home = () => {
                 title="My Profile"
                 description="Update your preferences"
                 buttonText="Edit"
-                href="/profile"
+                href="/edit-profile"
               />
             </Row>
           </div>
