@@ -3,6 +3,8 @@ import { Container, Row } from 'react-bootstrap';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import CreateProfileForm from '@/components/CreateProfileForm';
+import { prisma } from '@/lib/prisma';
+import { redirect } from 'next/navigation';
 
 /** Render a list of stuff for the logged in user. */
 const CreateProfilePage = async () => {
@@ -14,6 +16,13 @@ const CreateProfilePage = async () => {
       // eslint-disable-next-line @typescript-eslint/comma-dangle
     } | null,
   );
+  const owner = (session && session.user && session.user.email) || '';
+  const student = await prisma.student.findFirst({
+    where: {
+      email: owner,
+    },
+  });
+  if (student) redirect('/user-profile');
   //   const owner = (session && session.user && session.user.email) || '';
   // console.log(stuff);
   return (

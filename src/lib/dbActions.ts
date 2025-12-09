@@ -126,7 +126,7 @@ export async function addStudent(studentData: {
  *  Get a student by email
  *  ----------------------------- */
 export async function getStudentByEmail(email: string) {
-  await prisma.student.findUnique({
+  return prisma.student.findUnique({
     where: { email },
   });
 }
@@ -152,17 +152,20 @@ export async function getAllStudents() {
 /** -----------------------------
  *  Update a Student profile
  *  ----------------------------- */
-export async function updateStudent(id: number, updatedData: {
-  email: string;
-  firstName: string;
-  lastName: string;
-  hobbies: string[];
-  bioInfo: string;
-  cleanliness: Ratings;
-  noiseLevels: Ratings;
-  major: string;
-  profilePicture?: string;
-}) {
+export async function updateStudent(
+  id: number,
+  updatedData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    hobbies: string[];
+    bioInfo: string;
+    cleanliness: Ratings;
+    noiseLevels: Ratings;
+    major: string;
+    profilePicture?: string;
+  },
+) {
   await prisma.student.update({
     where: { id },
     data: {

@@ -11,7 +11,7 @@ export type StudentListEntry = {
   email: string;
   firstName: string;
   lastName: string;
-  hobbies: string;
+  hobbies: string[];
   cleanliness: Ratings;
   noiseLevels: Ratings;
   major: string;
@@ -104,7 +104,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
 
     return students.filter((s) => {
       const fullName = `${s.firstName} ${s.lastName}`.toLowerCase();
-      const hobbies = s.hobbies.toLowerCase();
+      const hobbies = s.hobbies.join(', ').toLowerCase();
       const major = s.major.toLowerCase();
       const cleanNum = ratingToNumber(s.cleanliness);
       const noiseNum = ratingToNumber(s.noiseLevels);
@@ -136,7 +136,7 @@ const RoommateListClient = ({ students }: ListClientProps) => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="filter-hobby">
-              <Form.Label>Hobbie</Form.Label>
+              <Form.Label>Hobbies</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter interests"
@@ -180,8 +180,10 @@ const RoommateListClient = ({ students }: ListClientProps) => {
                   />
                 </div>
                 <Stack gap={1} className="w-100">
-                  <div className="small text-muted">Hobbie</div>
-                  <div className="small fw-semibold">{s.hobbies || 'N/A'}</div>
+                  <div className="small text-muted">Hobbies</div>
+                  <div className="small fw-semibold">
+                    {s.hobbies.length ? s.hobbies.join(', ') : 'N/A'}
+                  </div>
                   <div className="small text-muted mt-1">Roommate type</div>
                   <div className="small fw-semibold">{deriveRoommateType(s.cleanliness, s.noiseLevels)}</div>
                   <div className="small text-muted mt-1">Major</div>

@@ -24,7 +24,7 @@ async function authenticateWithUI(
   page: Page,
   email: string,
   password: string,
-  sessionName: string
+  sessionName: string,
 ): Promise<void> {
   const sessionPath = path.join(SESSION_STORAGE_PATH, `${sessionName}.json`);
 

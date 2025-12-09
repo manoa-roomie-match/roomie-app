@@ -31,7 +31,7 @@ interface StudentData {
   email: string;
   firstName: string;
   lastName: string;
-  hobbies: string;
+  hobbies: string[];
   bioInfo: string;
   cleanliness: string;
   noiseLevels: string;
@@ -140,19 +140,11 @@ export default function ProfilePage() {
   };
 
   // Parse hobbies string into array
-  const hobbiesArray = [];
-
-  if (studentData && studentData.hobbies) {
-    const hobbiesString = studentData.hobbies;
-    const hobbiesList = hobbiesString.split(',');
-
-    for (let i = 0; i < hobbiesList.length; i++) {
-      const hobby = hobbiesList[i].trim();
-      if (hobby.length > 0) {
-        hobbiesArray.push(hobby);
-      }
-    }
-  }
+  const hobbiesArray = Array.isArray(studentData?.hobbies)
+    ? studentData.hobbies
+      .map((hobby) => hobby.trim())
+      .filter((hobby) => hobby.length > 0)
+    : [];
 
   const calculateCompleteness = () => {
     if (!studentData) return 0;
@@ -162,7 +154,7 @@ export default function ProfilePage() {
       studentData.email,
       studentData.major,
       studentData.bioInfo,
-      studentData.hobbies,
+      studentData.hobbies.length ? 'hobbies' : '',
       studentData.cleanliness,
       studentData.noiseLevels,
       studentData.profilePicture,
@@ -180,7 +172,7 @@ export default function ProfilePage() {
     email: session?.user?.email || 'No email',
     major: 'Undeclared',
     bioInfo: 'No bio added yet.',
-    hobbies: 'None',
+    hobbies: [],
     cleanliness: 'THREE',
     noiseLevels: 'THREE',
     profilePicture:
@@ -203,7 +195,7 @@ export default function ProfilePage() {
             variant="light"
             size="sm"
             className="me-2"
-            href="/profile/edit"
+            href="/edit-profile"
           >
             <FaEdit className="me-2" />
             Edit Profile
@@ -292,7 +284,7 @@ export default function ProfilePage() {
             <p className="text-muted mb-3">
               Create your student profile to start finding compatible roommates!
             </p>
-            <Button variant="primary" size="lg" href="/profile/edit">
+            <Button variant="primary" size="lg" href="/create-profile">
               Create Profile
             </Button>
           </Card.Body>

@@ -33,17 +33,13 @@ const CreateProfileForm: React.FC = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
-  const onSubmit = async (submitData: {
-    email: string,
-    firstName: string,
-    lastName: string,
-    hobbies: (string | undefined)[],
-    bioInfo: string,
+  const onSubmit = async (submitData: { email: string, firstName: string, lastName: string,
+    hobbies: (string | undefined)[], bioInfo: string,
     cleanliness: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
     noiseLevels: 'THREE' | 'TWO' | 'ONE' | 'FOUR' | 'FIVE',
-    major: string
-  }) => {
-    // console.log('Submitted student profile data:', submitData);
+    major: string }) => {
+    // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
+    console.log('Submitted student profile data:', submitData);
     try {
       let profilePicture = null;
 
@@ -61,9 +57,7 @@ const CreateProfileForm: React.FC = () => {
         profilePicture = uploadData.publicUrl;
       }
       console.log(profilePicture);
-      const cleanedHobbies = submitData.hobbies.filter(
-        (hobby): hobby is string => typeof hobby === 'string',
-      );
+      const cleanedHobbies = submitData.hobbies.filter((hobby): hobby is string => typeof hobby === 'string');
       await addStudent({
         ...submitData,
         hobbies: cleanedHobbies,
@@ -72,17 +66,19 @@ const CreateProfileForm: React.FC = () => {
       swal('Success', 'Your item has been added', 'success', {
         timer: 2000,
       }).then(() => {
-        router.push('/profile');
+        router.push('/user-profile');
       });
     } catch (err) {
       console.error(err);
       swal('Error', 'Failed to save profile', 'error');
     }
   };
+
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     console.log('Selected file:', file);
     if (!file) return;
+
     setPhotoFile(file);
     setPreview(URL.createObjectURL(file));
   };
@@ -229,7 +225,7 @@ const CreateProfileForm: React.FC = () => {
                           field.value
                             ? field.value
                               .filter((v): v is string => typeof v === 'string')
-                              .map(v => ({ value: v, label: v }))
+                              .map((v) => ({ value: v, label: v }))
                             : []
                         }
                         className={errors.hobbies ? 'is-invalid' : ''}
@@ -240,6 +236,7 @@ const CreateProfileForm: React.FC = () => {
                     {errors.hobbies?.message}
                   </div>
                 </Form.Group>
+
                 <Form.Group className="form-group">
                   <Row className="pt-3">
                     <Col>
