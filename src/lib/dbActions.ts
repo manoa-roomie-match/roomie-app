@@ -4,6 +4,7 @@ import { Stuff, Condition, Ratings } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
+import { ratingToNumber } from './utilityFunctions';
 
 /**
  * Adds a new stuff to the database.
@@ -179,4 +180,65 @@ export async function updateStudent(
       profilePicture: updatedData.profilePicture,
     },
   });
+}
+export async function findMatchingStudents(studentId: number) {
+  // Get the reference student's noiseLevels and cleanliness
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+    select: { noiseLevels: true, cleanliness: true },
+  });
+
+  if (!student) return [];
+
+  // Find 3 other students with the same noiseLevels and cleanliness
+  const matches = await prisma.student.findMany({
+    where: {
+      noiseLevels: student.noiseLevels,
+      cleanliness: student.cleanliness,
+      NOT: { id: studentId },
+    },
+    take: 3,
+  });
+
+  return matches;
+}
+export async function findStudentsWithinRange(studentId: number) {
+  // Fetch reference student's noiseLevels and cleanliness
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+    select: { noiseLevels: true, cleanliness: true },
+  });
+
+  if (!student) return [];
+
+  // Calculate ranges
+  const noiseMin = Math.max(1, ratingToNumber(student.noiseLevels) - 1);
+  const noiseMax = Math.min(5, ratingToNumber(student.noiseLevels) + 1);
+  const cleanMin = Math.max(1, ratingToNumber(student.cleanliness) - 1);
+  const cleanMax = Math.min(5, ratingToNumber(student.cleanliness) + 1);
+  const noiseRange = [];
+  const cleanRange = [];
+  
+  for (let i = noiseMin; i <= noiseMax; i++) {
+    noiseRange.push(i);
+  }
+  for (let i = cleanMin; i <= cleanMax; i++) {
+    cleanRange.push(i);
+  }
+  
+  // Convert numbers back to enum strings if needed
+  const numberToWord = (num: number): Ratings => ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'][num - 1] as Ratings;
+  const noiseEnumRange = noiseRange.map(numberToWord);
+  const cleanEnumRange = cleanRange.map(numberToWord);
+  
+  const matches = await prisma.student.findMany({
+    where: {
+      noiseLevels: { in: noiseEnumRange },
+      cleanliness: { in: cleanEnumRange },
+      NOT: { id: studentId },
+    },
+    take: 5,
+  });
+
+  return matches;
 }

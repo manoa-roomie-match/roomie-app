@@ -72,6 +72,14 @@ const NavBar: React.FC = () => {
                 >
                   My Messages
                 </Nav.Link>,
+                <Nav.Link
+                id="find-match-nav"
+                href="/find-match"
+                key="find-match"
+                active={pathName === '/find-match'}
+              >
+                Find Matches!
+              </Nav.Link>,
               ]
               : ''}
 
