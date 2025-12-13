@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Badge, Button, Card, Col, Form, Image, Row, Stack } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
 import { ratingToNumber, deriveRoommateType } from '@/lib/utilityFunctions';
-import { renderStars } from '@/lib/renderFunctions';
+import renderStars from '@/lib/renderFunctions';
 
 export type StudentListEntry = {
   id: number;

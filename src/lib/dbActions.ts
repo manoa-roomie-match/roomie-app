@@ -1,11 +1,10 @@
 'use server';
 
-import { Stuff, Condition, Ratings } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
+import { Stuff, Condition, Ratings, Student } from '@prisma/client';
 import { prisma } from './prisma';
-import { ratingToNumber, getRange } from './utilityFunctions';
-import { Student } from '@prisma/client';
+import { getRange } from './utilityFunctions';
 
 /**
  * Adds a new stuff to the database.
@@ -203,7 +202,7 @@ export async function findMatchingStudents(studentId: number): Promise<Student[]
 
   return matches;
 }
-export async function findStudentsWithinRange(studentId: number): Promise<Student[]>{
+export async function findStudentsWithinRange(studentId: number): Promise<Student[]> {
   // Fetch reference student's noiseLevels and cleanliness
   const student = await prisma.student.findUnique({
     where: { id: studentId },
@@ -213,13 +212,13 @@ export async function findStudentsWithinRange(studentId: number): Promise<Studen
   if (!student) return [];
 
   // Calculate ranges
-  const { noiseRange, cleanRange } = getRange(student.noiseLevels, student.cleanliness, 1)
-  
+  const { noiseRange, cleanRange } = getRange(student.noiseLevels, student.cleanliness, 1);
+
   // Convert numbers back to enum strings if needed
   const numberToWord = (num: number): Ratings => ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'][num - 1] as Ratings;
   const noiseEnumRange = noiseRange.map(numberToWord);
   const cleanEnumRange = cleanRange.map(numberToWord);
-  
+
   const matches = await prisma.student.findMany({
     where: {
       noiseLevels: { in: noiseEnumRange },
@@ -231,7 +230,7 @@ export async function findStudentsWithinRange(studentId: number): Promise<Studen
 
   return matches;
 }
-export async function getStudentsByHobby(studentId: number): Promise<Student[]>{
+export async function getStudentsByHobby(studentId: number): Promise<Student[]> {
   // Fetch reference student's noiseLevels and cleanliness
   const student = await prisma.student.findUnique({
     where: { id: studentId },
@@ -241,13 +240,13 @@ export async function getStudentsByHobby(studentId: number): Promise<Student[]>{
   if (!student) return [];
 
   // Calculate ranges
-  const { noiseRange, cleanRange } = getRange(student.noiseLevels, student.cleanliness, 3)
-  
+  const { noiseRange, cleanRange } = getRange(student.noiseLevels, student.cleanliness, 3);
+
   // Convert numbers back to enum strings if needed
   const numberToWord = (num: number): Ratings => ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'][num - 1] as Ratings;
   const noiseEnumRange = noiseRange.map(numberToWord);
   const cleanEnumRange = cleanRange.map(numberToWord);
-  
+
   const matches = await prisma.student.findMany({
     where: {
       noiseLevels: { in: noiseEnumRange },

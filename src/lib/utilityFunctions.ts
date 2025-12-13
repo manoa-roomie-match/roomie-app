@@ -1,4 +1,4 @@
-import { Ratings, Student } from '@prisma/client';
+import { Ratings } from '@prisma/client';
 
 export const ratingToNumber = (rating: Ratings): number => {
   const map: Record<Ratings, number> = {
@@ -29,7 +29,7 @@ export const getRange = (noiseLevels: Ratings, cleanliness: Ratings, delta: numb
   const cleanMax = Math.min(5, ratingToNumber(cleanliness) + delta);
   const noiseRange = [];
   const cleanRange = [];
-  
+
   for (let i = noiseMin; i <= noiseMax; i++) {
     noiseRange.push(i);
   }
@@ -40,5 +40,5 @@ export const getRange = (noiseLevels: Ratings, cleanliness: Ratings, delta: numb
   return {
     noiseRange,
     cleanRange,
-  }
-}
+  };
+};
