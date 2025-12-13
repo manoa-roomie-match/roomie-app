@@ -5,7 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import MatchingPageSwiper from '@/components/MatchingPageSwiper';
 import { Student } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-import { findMatchingStudents, findStudentsWithinRange } from '@/lib/dbActions';
+import { findMatchingStudents, findStudentsWithinRange, getStudentsByHobby} from '@/lib/dbActions';
 import { notFound } from 'next/navigation';
 
 const MatchingPage = async () => {
@@ -25,7 +25,9 @@ const MatchingPage = async () => {
   }
   const topMatches: Student[] = await findMatchingStudents(student?.id);
   const rangeMatches: Student[] = await findStudentsWithinRange(student?.id); 
+  const hobbyMatches: Student[] = await getStudentsByHobby(student?.id);
   topMatches.push(...rangeMatches);
+  topMatches.push(...hobbyMatches)
   const uniqueMatches = Array.from(
     new Map(topMatches.map(s => [s.id, s])).values()
   );
@@ -36,13 +38,11 @@ const MatchingPage = async () => {
         <Row className="d-flex justify-content-center align-items-center">
           <h1 className="text-uppercase fw-bold mb-0 text-center">We found matches!</h1>
         </Row>
-          <MatchingPageSwiper topMatches={uniqueMatches}/>
+          <MatchingPageSwiper topMatches={uniqueMatches} student={student}/>
         </Col>
       </Row>
     </Container>
   )
-
-
 }
 
 export default MatchingPage;

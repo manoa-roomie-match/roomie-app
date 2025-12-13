@@ -10,8 +10,14 @@ import { redirect, useRouter } from 'next/navigation';
 import { Card, Image, Stack, Badge, Button, Row, Col } from 'react-bootstrap';
 import { deriveRoommateType } from '@/lib/utilityFunctions';
 import { renderStars } from '@/lib/renderFunctions';
+import { Student } from '@prisma/client';
 
-const MatchingPageSwiper = ({ topMatches }) => {
+type StudentList = {
+    topMatches: Student[];
+    student: Student;
+}
+
+const MatchingPageSwiper = ({ topMatches, student }: StudentList) => {
     const { data: session, status } = useSession();
     const currentUser = session?.user?.email || '';
     const router = useRouter();
@@ -58,11 +64,30 @@ const MatchingPageSwiper = ({ topMatches }) => {
                 <Col className="d-flex flex-column justify-content-center align-items-center">
                 <Stack gap={1} className="w-100">
                   <div className="small text-muted">Hobbies</div>
-                  <div className="small fw-semibold">
+                  {/* <div className="small fw-semibold">
                     {s.hobbies.length ? s.hobbies.join(', ') : 'N/A'}
+                  </div> */}
+                  <div className="small fw-semibold">
+                    {s.hobbies.length
+                      ? s.hobbies.map((hobby, idx) => (
+                          <span
+                            key={hobby}
+                            className={student.hobbies.includes(hobby) ? 'text-success fw-bold' : ''}
+                          >
+                            {hobby}
+                            {idx < s.hobbies.length - 1 && ', '}
+                          </span>
+                        ))
+                      : 'N/A'}
                   </div>
                   <div className="small text-muted mt-1">Roommate type</div>
-                  <div className="small fw-semibold">{deriveRoommateType(s.cleanliness, s.noiseLevels)}</div>
+                  <div className="small fw-semibold">
+                    <span
+                      className={deriveRoommateType(student.cleanliness, student.noiseLevels) === deriveRoommateType(s.cleanliness, s.noiseLevels)  ? 'text-success fw-bold' : ''}
+                    >
+                      {deriveRoommateType(s.cleanliness, s.noiseLevels)}
+                    </span>
+                  </div>
                   </Stack>
                 </Col>
               </Row>
@@ -88,10 +113,10 @@ const MatchingPageSwiper = ({ topMatches }) => {
                       Navigate to messages when there is a linked user account; keep the button disabled if none exists.
                     */}
                     <Button
-                      onClick={() => s.userId && router.push(`/messages?with=${s.userId}`)}
+                      onClick={() => s.id && router.push(`/messages?with=${s.id}`)}
                       variant="success"
                       size="sm"
-                      disabled={!s.userId}
+                      disabled={!s.id}
                     >
                       Send Message
                     </Button>
