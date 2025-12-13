@@ -5,6 +5,8 @@ import { Ratings } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { Badge, Button, Card, Col, Form, Image, Row, Stack } from 'react-bootstrap';
 import { FaStar } from 'react-icons/fa';
+import { ratingToNumber, deriveRoommateType } from '@/lib/utilityFunctions';
+import renderStars from '@/lib/renderFunctions';
 
 export type StudentListEntry = {
   id: number;
@@ -17,43 +19,6 @@ export type StudentListEntry = {
   major: string;
   profilePicture: string;
   userId: number | null;
-};
-
-const ratingToNumber = (rating: Ratings): number => {
-  const map: Record<Ratings, number> = {
-    ONE: 1,
-    TWO: 2,
-    THREE: 3,
-    FOUR: 4,
-    FIVE: 5,
-  };
-  return map[rating] ?? 3;
-};
-
-const renderStars = (rating: Ratings, size = 14) => {
-  const numRating = ratingToNumber(rating);
-  return (
-    <div className="d-flex align-items-center gap-1">
-      {[0, 1, 2, 3, 4].map((i) => (
-        <FaStar
-          // eslint-disable-next-line react/no-array-index-key
-          key={i}
-          className={i < numRating ? 'text-warning' : 'text-muted'}
-          size={size}
-        />
-      ))}
-    </div>
-  );
-};
-
-const deriveRoommateType = (cleanliness: Ratings, noiseLevels: Ratings) => {
-  const clean = ratingToNumber(cleanliness);
-  const noise = ratingToNumber(noiseLevels);
-  if (clean >= 4 && noise <= 2) return 'Quiet & Tidy';
-  if (clean >= 4 && noise >= 4) return 'Social & Clean';
-  if (clean <= 2 && noise >= 4) return 'Laid-back & Loud';
-  if (clean <= 2 && noise <= 2) return 'Chill & Low-Key';
-  return 'Balanced';
 };
 
 type StarFilterProps = {
