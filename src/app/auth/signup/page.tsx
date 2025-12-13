@@ -17,8 +17,15 @@ type SignUpForm = {
 
 /** The sign up page. */
 const SignUp = () => {
+  const ALLOWED_DOMAINS = ['hawaii.edu'];
+
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email is invalid'),
+    email: Yup.string().required('Email is required').email('Email is invalid')
+      .test('email-domain', 'Email must be from an authorized domain', (value) => {
+        if (!value) return false;
+        const domain = value.split('@')[1];
+        return ALLOWED_DOMAINS.includes(domain);
+      }),
     password: Yup.string()
       .required('Password is required')
       .min(6, 'Password must be at least 6 characters')
@@ -59,8 +66,12 @@ const SignUp = () => {
                       type="text"
                       {...register('email')}
                       className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                      placeholder="user@hawaii.edu"
                     />
                     <div className="invalid-feedback">{errors.email?.message}</div>
+                    <Form.Text className="text-muted">
+                      Only @hawaii.edu emails are accepted
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group className="form-group">
