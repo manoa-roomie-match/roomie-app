@@ -17,6 +17,9 @@ const ViewRoommatesPage = async () => {
     } | null,
   );
 
+  const userWithRole = session?.user as { email: string; randomKey: string };
+  const role = userWithRole?.randomKey;
+
   const students = await prisma.student.findMany({
     orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
     select: {
@@ -51,7 +54,7 @@ const ViewRoommatesPage = async () => {
             <h1 className="text-uppercase fw-bold mb-0">list</h1>
           </Col>
         </Row>
-        <RoommateListClient students={studentsWithUserId} />
+        <RoommateListClient students={studentsWithUserId} isAdmin={role === 'ADMIN'} />
       </Container>
     </main>
   );

@@ -54,7 +54,7 @@ const NavBar: React.FC = () => {
               ]
               : ''}
 
-            {currentUser && role === 'USER'
+            {currentUser && (role === 'USER' || role === 'ADMIN')
               ? [
                 <Nav.Link
                   id="view-roommate-nav"
@@ -84,16 +84,8 @@ const NavBar: React.FC = () => {
               : ''}
 
             {/* Admin log in has admin dashboard */}
-            {currentUser && role === 'ADMIN'
+            {/* {currentUser && role === 'ADMIN'
               ? [
-                <Nav.Link
-                  id="admin-dashboard-nav"
-                  href="/admin/dashboard"
-                  key="admin-dashboard"
-                  active={pathName === '/admin/dashboard'}
-                >
-                  Admin Dashboard
-                </Nav.Link>,
                 <Nav.Link
                   id="manage-users-nav"
                   href="/admin/manage-users"
@@ -103,7 +95,7 @@ const NavBar: React.FC = () => {
                   Manage Users
                 </Nav.Link>,
               ]
-              : ''}
+              : ''} */}
           </Nav>
           <Nav>
             {session ? (

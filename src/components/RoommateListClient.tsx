@@ -50,9 +50,10 @@ const StarFilter = ({ label, value, onChange }: StarFilterProps) => (
 
 type ListClientProps = {
   students: StudentListEntry[];
+  isAdmin: boolean;
 };
 
-const RoommateListClient = ({ students }: ListClientProps) => {
+const RoommateListClient = ({ students, isAdmin }: ListClientProps) => {
   const router = useRouter();
   const [nameFilter, setNameFilter] = React.useState('');
   const [hobbyFilter, setHobbyFilter] = React.useState('');
@@ -171,6 +172,20 @@ const RoommateListClient = ({ students }: ListClientProps) => {
                     >
                       Send Message
                     </Button>
+                    {
+                      isAdmin
+                      && (
+                        <Button
+                          onClick={() => s.userId && router.push(`/admin/manage-users/${s.id}`)}
+                          variant="success"
+                          size="sm"
+                          disabled={!s.userId}
+                          className="mt-2"
+                        >
+                          Manage User Profile
+                        </Button>
+                      )
+                    }
                   </div>
                 </Stack>
               </Card.Body>

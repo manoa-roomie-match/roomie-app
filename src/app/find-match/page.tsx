@@ -26,8 +26,8 @@ const MatchingPage = async () => {
   const topMatches: Student[] = await findMatchingStudents(student?.id);
   const rangeMatches: Student[] = await findStudentsWithinRange(student?.id);
   const hobbyMatches: Student[] = await getStudentsByHobby(student?.id);
-  topMatches.push(...rangeMatches);
   topMatches.push(...hobbyMatches);
+  topMatches.push(...rangeMatches);
   const uniqueMatches = Array.from(
     new Map(topMatches.map(s => [s.id, s])).values(),
   );
